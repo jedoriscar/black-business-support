@@ -1,0 +1,137 @@
+---
+title: "White Fragility & Moral Affirmation S3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+
+
+# Personal Self-Esteem After Brand Support
+
+```{r}
+summary(lm(SE_2_Z ~ purchase_Z, wf_dt2))
+summary(lm(SE_2_Z ~ wom_Z, wf_dt2))
+summary(lm(SE_2_Z ~ shop_intentions_Z, wf_dt2))
+summary(lm(SE_2_Z ~ attitude_Z, wf_dt2))
+summary(lm(SE_2_Z ~ purchase_Z*brand_race, wf_dt2))
+summary(lm(SE_2_Z ~ wom_Z*brand_race, wf_dt2))
+summary(lm(SE_2_Z ~ shop_intentions_Z*brand_race, wf_dt2))
+summary(lm(SE_2_Z ~ attitude_Z*brand_race, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z*article_condition*brand_race, wf_dt2))
+summary(lm(SE_2_Z ~ purchase_Z*brand_race*article_condition, wf_dt2))
+summary(lm(SE_2_Z ~ wom_Z*brand_race*article_condition, wf_dt2))
+summary(lm(SE_2_Z ~ shop_intentions_Z*brand_race*article_condition, wf_dt2))
+summary(lm(SE_2_Z ~ attitude_Z*brand_race*article_condition, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z*article_condition, wf_dt2))
+```
+
+#### There is a defensiveness  * article conditon such that people who read about the racial wealth gap and were more defensive increased their self-esteem after interacting with the brand. 
+
+# Personal Self-Esteem Change After Brand Support
+
+# Public Collective Self-Esteem After Brand Support
+
+```{r}
+summary(lm(public_CSE2_Z ~ purchase_Z, wf_dt2))
+summary(lm(public_CSE2_Z ~ wom_Z, wf_dt2))
+summary(lm(public_CSE2_Z ~ shop_intentions_Z, wf_dt2))
+summary(lm(public_CSE2_Z ~ attitude_Z, wf_dt2))
+summary(lm(public_CSE2_Z ~ support_Z, wf_dt2))
+summary(lm(public_CSE2_Z ~ purchase_Z*brand_race, wf_dt2))
+summary(lm(public_CSE2_Z ~ wom_Z*brand_race, wf_dt2))
+summary(lm(public_CSE2_Z ~ shop_intentions_Z*brand_race, wf_dt2))
+summary(lm(public_CSE2_Z ~ attitude_Z*brand_race, wf_dt2))
+summary(lm(public_CSE2_Z ~ defensive_reverse_Z*article_condition*brand_race, wf_dt2))
+summary(lm(public_CSE2_Z ~ purchase_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSE2_Z ~ wom_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSE2_Z ~ shop_intentions_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSE2_Z ~ attitude_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSE2_Z ~ defensive_reverse_Z*article_condition, wf_dt2))
+```
+
+#### There is a relationship between defensiveness, article condition, and brand race such that those who are more defensive in the after reading the racial wealth gap article in the black brand condition, had higher public collective self-esteem. Liek the last variable there is a sig interaction between article condition and defensiveness. 
+
+# Public Collective Self-Esteem Change After Brand Support
+
+```{r}
+summary(lm(public_CSEt1t2_change ~ purchase_Z, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ wom_Z, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ shop_intentions_Z, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ attitude_Z, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ support_Z, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ purchase_Z*brand_race, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ wom_Z*brand_race, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ shop_intentions_Z*brand_race, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ attitude_Z*brand_race, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ defensive_reverse_Z*article_condition*brand_race, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ purchase_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ wom_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ shop_intentions_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ attitude_Z*brand_race*article_condition, wf_dt2))
+summary(lm(public_CSEt1t2_change ~ defensive_reverse_Z*article_condition, wf_dt2))
+
+```
+
+#### Nothing going on with change in public self-esteem at all.  
+
+```{r}
+summary(lm(private_CSE2_Z ~ purchase_Z, wf_dt2))
+summary(lm(private_CSE2_Z ~ wom_Z, wf_dt2))
+summary(lm(private_CSE2_Z ~ shop_intentions_Z, wf_dt2))
+summary(lm(private_CSE2_Z ~ attitude_Z, wf_dt2))
+summary(lm(private_CSE2_Z ~ purchase_Z*brand_race, wf_dt2))
+summary(lm(private_CSE2_Z ~ wom_Z*brand_race, wf_dt2))
+summary(lm(private_CSE2_Z ~ shop_intentions_Z*brand_race, wf_dt2))
+summary(lm(private_CSE2_Z ~ attitude_Z*brand_race, wf_dt2))
+summary(lm(private_CSE2_Z ~ defensive_reverse_Z*article_condition*brand_race, wf_dt2))
+summary(lm(private_CSE2_Z ~ purchase_Z*brand_race*article_condition, wf_dt2))
+summary(lm(private_CSE2_Z ~ wom_Z*brand_race*article_condition, wf_dt2))
+summary(lm(private_CSE2_Z ~ shop_intentions_Z*brand_race*article_condition, wf_dt2))
+summary(lm(private_CSE2_Z ~ attitude_Z*brand_race*article_condition, wf_dt2))
+```
+```{r}
+summary(lm(private_CSE2_Z ~ BMIS_outraged_1_Z*article_condition, wf_dt2))
+summary(lm(private_CSE2_Z ~ defensive_reverse_Z*article_condition, wf_dt2))
+```
+
+#### We get a defensiveness * article_condition interaction such that people who are more defensive in the racial wealth gap condition report higher private collective self-esteem.  
+
+#### Affect After Brand Support
+
+```{r}
+summary(lm(BMIS_shame_2_Z ~ brand_race*article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_outraged_2_Z ~ brand_race*article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_guilt_2_Z ~ brand_race*article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_angry_2_Z ~ brand_race*article_condition*support_Z, wf_dt2))
+```
+```{r}
+summary(lm(BMIS_shame_2_Z ~ brand_race*support_Z, wf_dt2))
+summary(lm(BMIS_outraged_2_Z ~ brand_race*support_Z, wf_dt2))
+summary(lm(BMIS_guilt_2_Z ~ brand_race*support_Z, wf_dt2))
+summary(lm(BMIS_angry_2_Z ~ brand_race*support_Z, wf_dt2))
+```
+```{r}
+summary(lm(BMIS_shame_2_Z ~ article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_outraged_2_Z ~ article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_guilt_2_Z ~ article_condition*support_Z, wf_dt2))
+summary(lm(BMIS_angry_2_Z ~ article_condition*support_Z, wf_dt2))
+```
+```{r}
+summary(lm(BMIS_shame_2_Z ~ support_Z, wf_dt2))
+summary(lm(BMIS_outraged_2_Z ~ support_Z, wf_dt2))
+summary(lm(BMIS_guilt_2_Z ~ support_Z, wf_dt2))
+summary(lm(BMIS_angry_2_Z ~ support_Z, wf_dt2))
+```
+
+
+#### Nothing going on here with affect beyond the brand race codnition. 
+
+

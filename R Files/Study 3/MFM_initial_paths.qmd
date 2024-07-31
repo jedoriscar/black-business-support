@@ -1,0 +1,104 @@
+---
+title: "White Fragility & Moral Affirmation S3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+
+
+# Main Analyses (Moral Fragility Model)
+
+## **Systemic Racism as a Moral Threat**
+
+### **Defensiveness and Systemic Racism**
+
+```{r Defensiveness across conditions}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_defensive_reverse = mean(defensive_reverse, na.rm = TRUE))
+summary(lm(defensive_reverse ~ article_condition, wf_dt2))
+```
+
+#### The wealth gap article is not associated with increased defensiveness.  
+
+### **Affect and Systemic Racism**
+
+#### The wealth gap article, lead to the most sadness. 
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_sad = mean(BMIS_sad_2, na.rm = TRUE))
+summary(lm(BMIS_sad_2_Z ~ article_condition, wf_dt2))
+```
+
+#### The no gap condition was the most optimistic, while the gap condition was more pessimistic than the control condition.
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_tone = mean(article_tone, na.rm = TRUE))
+summary(lm(article_tone_Z ~ article_condition, wf_dt2))
+```
+
+#### The gap condition had the most negative tone, while the no gap condition had the most positive tone. 
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_sentiment = mean(article_sentiment, na.rm = TRUE))
+  summary(lm(article_sentiment_Z ~ article_condition, wf_dt2))
+```
+
+#### People felt worse after reading the gap article, and they felt the best after reading the no gap article. 
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_feel = mean(article_feel, na.rm = TRUE))
+  summary(lm(article_feel_Z ~ article_condition, wf_dt2))
+```
+
+#### The gap condition lead to the most shame, while the nogap and control condition lead to similar amounts of shame.
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_shame = mean(BMIS_shame_2, na.rm = TRUE))
+summary(lm(BMIS_shame_2_Z ~ article_condition, wf_dt2))
+```
+
+#### The gap condition lead to the most guilt, while the nogap and control condition lead to similar amounts of guilt.
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_guilt = mean(BMIS_guilt_2, na.rm = TRUE))
+summary(lm(BMIS_guilt_2_Z ~ article_condition, wf_dt2))
+```
+
+#### The gap condition lead to the most outrage, while the nogap and control condition lead to similar amounts of outrage.
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_outraged = mean(BMIS_outraged_2, na.rm = TRUE))
+  summary(lm(BMIS_outraged_2_Z ~ article_condition, wf_dt2))
+```
+
+#### People were no more or less empathetic in the gap condition.
+
+```{r}
+wf_dt2 %>%
+  group_by(article_condition) %>%
+  summarize(mean_empathetic = mean(BMIS_empathetic_2, na.rm = TRUE))
+summary(lm(BMIS_empathetic_2_Z ~ article_condition, wf_dt2))
+```

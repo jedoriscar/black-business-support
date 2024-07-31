@@ -1,0 +1,365 @@
+---
+title: "White Fragility & Moral Affirmation S3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+## Predictors/Moderators of the Self-Protective (i.e., Defensiveness) and Self-Reflective (i.e., negative moral affect) Pathways
+
+### **Bias-Awareness, Affect, and Defensiveness**
+
+```{r affect and bias awareness}
+summary(lm(BMIS_angry_1_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ bias_aware_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ bias_aware_Z*article_condition, wf_dt2))
+```
+
+
+#### Bias-awareness does not really moderate the relationship between affect and article condition. It almost moderates the relationship with defensiveness (.07 such that increased bias-awareness is associated with decreased defensiveness). 
+
+### **Color-Blind Ideology, Affect, and Defensiveness**
+
+```{r affect and color blind}
+summary(lm(BMIS_angry_1_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ color_blind_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ color_blind_Z*article_condition, wf_dt2))
+```
+```{r}
+cb_outrage <- ggplot(wf_dt2, aes(x = color_blind_Z, y = BMIS_outraged_1_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Moral Outrage, Color-Blind Ideology, and Wealth Gap", 
+       subtitle = paste0("Color Blind Individuals are less outraged after r"),
+       x = "Color Blind Ideology",
+       y = "Outrage") +
+  annotate(geom="text", x=1.8, y=3, label="n = 310, β = -.51",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/cb_outrage.png", cb_outrage)
+```
+```{r}
+cb_defensiveness <- ggplot(wf_dt2, aes(x = color_blind_Z, y = defensive_reverse_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Defensiveness, Color-Blind Ideology, and Wealth Gap", 
+       subtitle = paste0("Color Blind Individuals are more defensive after reading the article"),
+       x = "Color Blind Ideology",
+       y = "Defensiveness") +
+  annotate(geom="text", x=1.8, y=3, label="n = 301, β = .62",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/cb_defensiveness.png", cb_defensiveness)
+```
+
+##### Color-blind ideology moderates the relationship between bias feedback and affect, such that racially color-blind ideology endorsement is associated with less affect after bias-feedback. It also moderates the relationship with defensivness such that those who endorse color blind racial ideology respond more defensively to the wealth gap article. 
+
+
+### **Collective Narcissm, Affect, and Defensiveness**
+
+```{r affect and color blind}
+summary(lm(BMIS_angry_1_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ collective_n_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ collective_n_Z*article_condition, wf_dt2))
+```
+```{r}
+ggplot(wf_dt2, aes(x = collective_n_Z, y = BMIS_outraged_1_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Moral Outrage, Collective Narcissm, and Wealth Gap", 
+       subtitle = paste0("Collective Narcissist Individuals are less outraged after reading the article"),
+       x = "Collective Narcissm",
+       y = "Outrage") +
+  annotate(geom="text", x=1.8, y=3, label="n = 306, β = -.33",
+           color="navajowhite4")
+```
+
+#### Collective Narcissm moderates the relationship between article condition, and outrage/sadness, such that those higher in collective narcissm are less likely to report outrage/sadness. Not any of the other afect variables but close with guilt (p = .07). It does not moderate the relationship with defensiveness. 
+
+### **Social Dominance Orientation, Affect, and Defensiveness**
+
+```{r affect and color blind}
+summary(lm(BMIS_angry_1_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ sdo_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ sdo_Z*article_condition, wf_dt2))
+```
+```{r}
+ggplot(wf_dt2, aes(x = sdo_Z, y = BMIS_outraged_1_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Moral Outrage, Social Dominance Orienation, and Wealth Gap", 
+       subtitle = paste0("Indviduals with a Social Dominance Orientation are less outraged after reading the article"),
+       x = "Social Dominance Orientation",
+       y = "Outrage") +
+  annotate(geom="text", x=1.8, y=3, label="n = 307, β = -.38",
+           color="navajowhite4")
+```
+```{r}
+ggplot(wf_dt2, aes(x = sdo_Z, y = defensive_reverse_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Defensiveness, Social Dominance Orienation, and Wealth Gap", 
+       subtitle = paste0("Indviduals with a Social Dominance Orientation are more defensive after reading the article"),
+       x = "Social Dominance Orientation",
+       y = "Defensiveness") +
+  annotate(geom="text", x=1.8, y=3, label="n = 298, β = .32",
+           color="navajowhite4")
+```
+#### Social Dominance orienation moderates the relationship between article condition, and outrage/sadness/shame/guilt (not the article feelings), such that those higher in collective narcissm are less likely to report this affect. It does also moderate the relationship with defensiveness, such that those who endorse sdo are less likley to report affect and more likly to respond defensivley when reading about the racial wealth gap. 
+
+### **Racial Centrality, Affect, and Defensiveness**
+
+```{r affect and racial identity}
+summary(lm(BMIS_angry_1_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ racial_centrality_Z*article_condition, wf_dt2))
+```
+
+#### Racial centrality generally does not moderate any of the relationships. 
+
+### **Public Regard, Affect, and Defensiveness**
+
+```{r affect and Public Regard}
+summary(lm(BMIS_angry_1_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ public_regard_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ public_regard_Z*article_condition, wf_dt2))
+```
+
+
+#### People high in public regard felt sadder (BMIS & slider), more pessimistic, and found the article less promising when reading the racial gap article. Public regard did not moderate the relationship between defensiveness or any of the other affective variables. 
+
+
+### **Private Regard, Affect, and Defensiveness**
+
+```{r affect and Private Regard}
+summary(lm(BMIS_angry_1_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ private_regard_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ private_regard_Z*article_condition, wf_dt2))
+```
+```{r}
+pr_defensiveness <- ggplot(wf_dt2, aes(x = private_regard_Z, y = defensive_reverse_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Defensiveness, Private Regard, and Wealth Gap", 
+       subtitle = paste0("Positive Regard for White Identity are more defensive after reading the article"),
+       x = "Private Regard",
+       y = "Defensiveness") +
+  annotate(geom="text", x=1.8, y=3, label="n = 302, β = .41",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/pr_defensiveness.png", pr_defensiveness)
+```
+
+#### People who hold White Americans with high private regard found the article to be more pessimistic and were more defensive to the article. Private regard did not moderate the relationship between defensiveness or any of the other affective variables. 
+
+### **Public Awareness, Affect, and Defensiveness**
+```{r affect and Public Awareness}
+summary(lm(BMIS_angry_1_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ public_aware_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ public_aware_Z*article_condition, wf_dt2))
+```
+
+#### People who thought that Americans were generally aware regarding racail issues felt sadder (BMIS & slider) and found the article to be more pessimistic. Public awareness did not moderate the relationship between defensiveness or any of the other affective variables. 
+
+### **Normative Pressure, Affect, and Defensiveness**
+```{r affect and Normative Pressure}
+summary(lm(BMIS_angry_1_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ norm_pressure_Z*article_condition, wf_dt2))
+```
+```{r}
+np_shame <- ggplot(wf_dt2, aes(x = norm_pressure_Z, y = BMIS_shame_1_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Normative Pressure, Shame, and Wealth Gap", 
+       subtitle = paste0("Higher normative pressure to be aware about racial biases leads to more shame when reading about the racial wealth gap"),
+       x = "Normative Pressure",
+       y = "Shame") +
+  annotate(geom="text", x=1.4, y=3, label="n = 303, β = .42",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/np_shame.png", np_shame)
+```
+#### People who report that their is normative pressure for them to be aware about racial issues and to adress racial issuesreport more shame and guilt, and less defensiveness when reading the article about the racil wealth gap. This was not related to any of the other affect vairbles (i.e., outrage, sadness, anger).
+
+### **Racial Climate, Affect, and Defensiveness**
+```{r affect and Racial Climate}
+summary(lm(BMIS_angry_1_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ racial_climate_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ racial_climate_Z*article_condition, wf_dt2))
+```
+
+#### Racial Climate does not moderate any of the variables. 
+
+### **Discrimination Concern, Affect, and Defensiveness**
+```{r affect and Discrimination Concern}
+summary(lm(BMIS_angry_1_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ discrimination_concern_Z*article_condition, wf_dt2))
+```
+```{r}
+dc_shame <- ggplot(wf_dt2, aes(x = discrimination_concern_Z, y = BMIS_shame_1_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Discrimination Concern, Shame, and Wealth Gap", 
+       subtitle = paste0("Discrimination Concern leads to more shame when reading about the racial wealth gap"),
+       x = "Discrimination Concern",
+       y = "Shame") +
+  annotate(geom="text", x=1.0, y=3, label="n = 307, β = .44",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/dc_shame.png", dc_shame)
+```
+```{r}
+dc_defense <- ggplot(wf_dt2, aes(x = discrimination_concern_Z, y = defensive_reverse_Z, colour = article_condition)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Discrimination Concern, Shame, and Wealth Gap", 
+       subtitle = paste0("Discrimination Concern leads to less defensiveness when reading about the racial wealth gap"),
+       x = "Discrimination Concern",
+       y = "Defensiveness") +
+  annotate(geom="text", x=1.0, y=3, label="n = 299, β = -.32",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/dc_defense.png", dc_defense)
+```
+#### Discrimination Concern moderates the relationship between all of the affect variables (Anger, Shame, Sadness, Guilt, Outrage) and article condition,such that those who consider racial discrimination to be a problem are more likley to report negative affect when reading about the racial inequality gap. They are also less likely to respond defensivley to this article.   
+
+### **Interracial contact, Affect, and Defensiveness**
+```{r affect and Discrimination Concern}
+summary(lm(BMIS_angry_1_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(BMIS_shame_1_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(BMIS_sad_1_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(BMIS_guilt_1_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(BMIS_outraged_1_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(article_tone_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(article_feel_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(article_sentiment_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+summary(lm(defensive_reverse_Z ~ interracial_contact_Z*article_condition, wf_dt2))
+```
+
+#### Interracial contact is associated with lower guilt after reading the article, which is odd. 
+
+
+

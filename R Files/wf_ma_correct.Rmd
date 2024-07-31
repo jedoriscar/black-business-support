@@ -1,0 +1,791 @@
+---
+title: "Black Brands and Moral Affirmation"
+author: "Jonathan Doriscar"
+date: "2023-10-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### **0. Beginning stuff **
+```{r Loading Packages}
+library(multcomp)
+library(lsr)
+library(pwr)
+library(psych)
+library(tidyverse)
+library(rio)
+library(qualtRics)
+library(data.table)
+library(dplyr)
+library(readr)
+library(tibble)
+library(rlang)
+library(cjoint)
+library(ggpubr) # version 0.2, loading required package 'magrittr'
+library(agricolae)
+library(rstatix)
+source("http://rfs.kvasaheim.com/stat200.R") # importing functions
+library(readr)
+library(Hmisc)
+library(corrplot)
+library(readxl)
+library(lm.beta)
+library(sjPlot)
+library(sjmisc)
+library(ggplot2)
+library(lsr)
+library("car") # load car and carData packages
+library("nnet")
+library("effects")
+library(effectsize)
+library(arm)
+library(lmtest)
+# Install the package jtools if not already installed
+library(jtools)
+library(broom.mixed)
+# you may be asked to install 'broom' and 'ggstance' packages as well
+library("ggstance")
+library(irr)
+library("ggsignif")
+library("mgcv")
+library("effects")
+library(forcats)
+options(scipen = 100)
+```
+```{r Importing Data}
+wf_dt <- read_csv("~/Documents/White Fragility/Buying Black and Moral Affirmation/wf_maS1.csv")
+View(wf_dt)
+attach(wf_dt)
+```
+```{r Column names}
+colnames(wf_dt)
+```
+```{r Summary for Brief Mood Introspection variables t1}
+summary(wf_dt[,19:34])
+```
+```{r Summary for Brief Mood Introspection variables t2}
+summary(wf_dt[,69:84])
+```
+```{r Summary for Bias Awareness, Demographics, and IAT Variables}
+summary(wf_dt[,14:17])
+```
+```{r discrepancy variable for no bias}
+wf_dt$discrepancy_nb <- car::recode(wf_dt$discrepancy_nb, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$attentioncheck_nb <- car::recode(wf_dt$attentioncheck_nb, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$discrepancy_b <- car::recode(wf_dt$discrepancy_b, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$attentioncheck_b <- car::recode(wf_dt$attentioncheck_b, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'") # larger scores indicate greater changes
+
+wf_dt$discrepancy_bias <- (wf_dt$discrepancy_b - wf_dt$attentioncheck_b) # deal with this later
+wf_dt$discrepancy_nobias <- (wf_dt$discrepancy_nb + wf_dt$discrepancy_nb) # deal with this later
+wf_dt$bias_discrepancy <- coalesce(wf_dt$discrepancy_bias, wf_dt$discrepancy_nobias) 
+
+```
+```{r no bias attention check}
+wf_dt$attentioncheck_nb <- as.numeric(wf_dt$attentioncheck_nb)
+is.numeric(wf_dt$attentioncheck_nb)
+which(wf_dt$attentioncheck_nb == "1", arr.ind = TRUE) # seeing which people failed my attention checks
+which(wf_dt$attentioncheck_nb == "2", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "3", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "5", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "6", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "7", arr.ind = TRUE)
+```
+```{r bias attention check}
+wf_dt$attentioncheck_b <- as.numeric(wf_dt$attentioncheck_b)
+is.numeric(wf_dt$attentioncheck_b)
+which(wf_dt$attentioncheck_b == "4", arr.ind = TRUE) # seeing which people failed my attention checks
+which(wf_dt$attentioncheck_b == "2", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "3", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "5", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "6", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "7", arr.ind = TRUE)
+```
+```{r creating data frame without people who missed attention checks}
+wf_dt2 <- wf_dt[-c(61, 81, 88, 82, 15, 301, 315, 323, 254),] # only lost 9 people
+```
+```{r}
+wf_dt2$bias_discrepancy_centered <- scale(wf_dt2$bias_discrepancy, center = TRUE, scale = FALSE) # Centering
+wf_dt2$bias_discrepancy_Z <- scale(wf_dt2$bias_discrepancy, center = TRUE, scale = TRUE) # Z-score
+```
+```{r creating condition variables}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    condition = rowSums(select(., nobias_white, nobias_black, bias_white, bias_black), na.rm = TRUE)
+  )
+as.factor(wf_dt2$condition)
+```
+```{r creating bias and brand race variables}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    bias = case_when(
+      condition %in% c(0, 1) ~ 0,
+      condition %in% c(2, 3) ~ 1,
+      TRUE ~ NA_integer_
+    ),
+    brand_race = case_when(
+      condition %in% c(0, 2) ~ 0,
+      condition %in% c(1, 3) ~ 1,
+      TRUE ~ NA_integer_
+    )
+  )
+```
+```{r creating shopping intentions}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    shop_intentions = rowSums(select(., rl_shop_intentions, rr_shop_intentions), na.rm = TRUE)
+  )
+# Centering and z-score for "shop_intentions"
+wf_dt2$shop_intentions_centered <- scale(wf_dt2$shop_intentions, center = TRUE, scale = FALSE) # Centering
+wf_dt2$shop_intentions_Z <- scale(wf_dt2$shop_intentions, center = TRUE, scale = TRUE) # Z-score
+```
+```{r creating purchase}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    purchase = rowSums(select(., rl_purchase, rr_purchase), na.rm = TRUE)
+  )
+# Centering and z-score for "purchase"
+wf_dt2$purchase_centered <- scale(wf_dt2$purchase, center = TRUE, scale = FALSE) # Centering
+wf_dt2$purchase_Z <- scale(wf_dt2$purchase, center = TRUE, scale = TRUE) # Z-score
+```
+```{r creating word of mouth}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    wom = rowSums(select(., rl_wom, rr_wom), na.rm = TRUE)
+  )
+# Centering and z-score for "wom"
+wf_dt2$wom_centered <- scale(wf_dt2$wom, center = TRUE, scale = FALSE) # Centering
+wf_dt2$wom_Z <- scale(wf_dt2$wom, center = TRUE, scale = TRUE) # Z-score
+```
+
+### ** Demographics**
+```{r Race}
+race_proportions <- table(wf_dt2$race)/length(wf_dt2$race) # creating race table
+(race_percentages <- race_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Gender}
+gender_proportions <- table(wf_dt2$gender)/length(wf_dt2$gender) # creating gender table
+(gender_percentages <- gender_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Political Affiliation}
+political_proportions <- table(wf_dt2$polit_affil)/length(wf_dt2$polit_affil) # creating political table
+(political_percentages <- political_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Education}
+education_proportions <- table(wf_dt2$education)/length(wf_dt2$education) # creating education table
+(education_percentages <- education_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r IAT previous}
+iatprev_proportions <- table(wf_dt2$iat_prev)/length(wf_dt2$iat_prev) # creating IAT previously table
+(iatprev_percentages <- iatprev_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r IAT racial}
+iatracial_proportions <- table(wf_dt2$iat_racial)/length(wf_dt2$iat_racial) # creating IAT racial table
+(iatracial_percentages <- iatracial_proportions*100) # multiplying the table by 100 to get percentages
+```
+
+
+### **1. Defensiveness**
+
+```{r Skewness for Defensiveness}
+hildebrand.rule(credibility, na.rm = TRUE)
+hildebrand.rule(objective, na.rm = TRUE)
+hildebrand.rule(valid, na.rm = TRUE)
+hildebrand.rule(useful, na.rm = TRUE)
+```
+```{r Standard Deviation for Defensiveness}
+sd(credibility, na.rm = TRUE)
+sd(objective, na.rm = TRUE)
+sd(valid, na.rm = TRUE)
+sd(useful, na.rm = TRUE)
+```
+```{r Histograms for Defensiveness}
+hist(credibility)
+hist(objective)
+hist(valid)
+hist(useful)
+```
+```{r Cronbach alpha for Defensiveness}
+defensive <- select(wf_dt2, 85:88)
+psych::alpha(defensive)
+
+```
+```{r Defensiveness Variables}
+wf_dt2$defensive <- rowMeans(wf_dt2[,85:88]) # creating defensiveness variable
+myscale <- 1:7 #defining scale to reverse defensivness variable
+wf_dt2 <- wf_dt2 %>%
+  mutate(defensive_reverse = min(myscale) - defensive + max(myscale)) # reversing defensivness scale
+wf_dt2$defensive_reverse_centered <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$defensive_reverse_Z <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = TRUE) # z score defensiveness 
+```
+```{r Creating container for all of defensivness statistics}
+(def_r_mean =  mean(wf_dt2$defensive_reverse, na.rm = TRUE)) # mean defensivness
+(def_r_sd =  sd(wf_dt2$defensive_reverse, na.rm = TRUE)) # sd defensiveness
+hist(wf_dt2$defensive_reverse_Z) # histogram of defensive z scores
+```
+```{r}
+# Perform ANOVA for defensive_reverse by bias
+summary((anova_defensive_reverse <- aov(defensive_reverse ~ as.factor(bias)*as.factor(brand_race), data = wf_dt2)))
+
+# Get summary of ANOVA
+(tukey_posthoc <- TukeyHSD(anova_defensive_reverse))
+
+```
+
+### **2. Bias Awareness**
+```{r Skewness for Bias Awareness}
+hildebrand.rule(BA_1, na.rm = TRUE)
+hildebrand.rule(BA_2, na.rm = TRUE)
+hildebrand.rule(BA_3, na.rm = TRUE)
+hildebrand.rule(BA_4, na.rm = TRUE)
+
+```
+```{r Standard Deviation for Bias Awareness}
+sd(BA_1, na.rm = TRUE)
+sd(BA_2, na.rm = TRUE)
+sd(BA_3, na.rm = TRUE)
+sd(BA_4, na.rm = TRUE)
+
+
+```
+```{r Histograms for Bias Awareness}
+hist(BA_1)
+hist(BA_2)
+hist(BA_3)
+hist(BA_4)
+```
+```{r Cronbach alpha for Bias Awareness}
+
+bias_aware <- select(wf_dt2, 14:17)
+psych::alpha(bias_aware)
+```
+```{r Bias Awareness Variables}
+wf_dt2$bias_aware <- rowMeans(wf_dt2[,14:17])
+wf_dt2$bias_aware_center <- scale(wf_dt2$bias_aware, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$bias_aware_Z <- scale(wf_dt2$bias_aware, center = TRUE, scale = TRUE) #Z scores 
+```
+```{r Bias Awareness Statistics}
+(BA_mean =  mean(wf_dt2$bias_aware, na.rm = TRUE)) # mean of bias awareness
+(BA_sd =  sd(wf_dt2$bias_aware, na.rm = TRUE)) # sd of bias awareness
+hist(wf_dt2$bias_aware_Z)
+```
+```{r anova for bias aware by condition }
+# Perform ANOVA for bias_aware by condition
+summary((anova_bias_aware <- aov(bias_aware ~ as.factor(condition), data = wf_dt2)))
+
+# Run Tukey post hoc test
+(tukey_posthoc <- TukeyHSD(anova_bias_aware))
+```
+
+
+### **3. Emotions**
+```{r Skewness for Emotions}
+hildebrand.rule(BMIS_lively_1, na.rm = TRUE)
+hildebrand.rule(BMIS_lively_2, na.rm = TRUE)
+hildebrand.rule(BMIS_happy_1, na.rm = TRUE)
+hildebrand.rule(BMIS_happy_2, na.rm = TRUE)
+hildebrand.rule(BMIS_sad_1, na.rm = TRUE)
+hildebrand.rule(BMIS_sad_2, na.rm = TRUE)
+hildebrand.rule(BMIS_shame_1, na.rm = TRUE)
+hildebrand.rule(BMIS_shame_2, na.rm = TRUE)
+hildebrand.rule(BMIS_guilt_1, na.rm = TRUE)
+hildebrand.rule(BMIS_guilt_2, na.rm = TRUE)
+hildebrand.rule(BMIS_tired_1, na.rm = TRUE)
+hildebrand.rule(BMIS_tired_2, na.rm = TRUE)
+hildebrand.rule(BMIS_caring_1, na.rm = TRUE)
+hildebrand.rule(BMIS_caring_2, na.rm = TRUE)
+hildebrand.rule(BMIS_content_1, na.rm = TRUE)
+hildebrand.rule(BMIS_content_2, na.rm = TRUE)
+hildebrand.rule(BMIS_gloomy_1, na.rm = TRUE)
+hildebrand.rule(BMIS_gloomy_2, na.rm = TRUE)
+hildebrand.rule(BMIS_jittery_1, na.rm = TRUE)
+hildebrand.rule(BMIS_jittery_2, na.rm = TRUE)
+hildebrand.rule(BMIS_drowsy_1, na.rm = TRUE)
+hildebrand.rule(BMIS_drowsy_2, na.rm = TRUE)
+hildebrand.rule(BMIS_nervous_1, na.rm = TRUE)
+hildebrand.rule(BMIS_nervous_2, na.rm = TRUE)
+hildebrand.rule(BMIS_calm_1, na.rm = TRUE)
+hildebrand.rule(BMIS_calm_2, na.rm = TRUE)
+hildebrand.rule(BMIS_jittery_1, na.rm = TRUE)
+hildebrand.rule(BMIS_jittery_2, na.rm = TRUE)
+hildebrand.rule(BMIS_loving_1, na.rm = TRUE)
+hildebrand.rule(BMIS_loving_2, na.rm = TRUE)
+hildebrand.rule(BMIS_fedup_1, na.rm = TRUE)
+hildebrand.rule(BMIS_fedup_2, na.rm = TRUE)
+```
+```{r Standard Deviation for Emotions}
+sd(BMIS_lively_1, na.rm = TRUE)
+sd(BMIS_lively_2, na.rm = TRUE)
+sd(BMIS_happy_1, na.rm = TRUE)
+sd(BMIS_happy_2, na.rm = TRUE)
+sd(BMIS_sad_1, na.rm = TRUE)
+sd(BMIS_sad_2, na.rm = TRUE)
+sd(BMIS_shame_1, na.rm = TRUE)
+sd(BMIS_shame_2, na.rm = TRUE)
+sd(BMIS_guilt_1, na.rm = TRUE)
+sd(BMIS_guilt_2, na.rm = TRUE)
+sd(BMIS_tired_1, na.rm = TRUE)
+sd(BMIS_tired_2, na.rm = TRUE)
+sd(BMIS_caring_1, na.rm = TRUE)
+sd(BMIS_caring_2, na.rm = TRUE)
+sd(BMIS_content_1, na.rm = TRUE)
+sd(BMIS_content_2, na.rm = TRUE)
+sd(BMIS_gloomy_1, na.rm = TRUE)
+sd(BMIS_gloomy_2, na.rm = TRUE)
+sd(BMIS_jittery_1, na.rm = TRUE)
+sd(BMIS_jittery_2, na.rm = TRUE)
+sd(BMIS_drowsy_1, na.rm = TRUE)
+sd(BMIS_drowsy_2, na.rm = TRUE)
+sd(BMIS_nervous_1, na.rm = TRUE)
+sd(BMIS_nervous_2, na.rm = TRUE)
+sd(BMIS_calm_1, na.rm = TRUE)
+sd(BMIS_calm_2, na.rm = TRUE)
+sd(BMIS_jittery_1, na.rm = TRUE)
+sd(BMIS_jittery_2, na.rm = TRUE)
+sd(BMIS_loving_1, na.rm = TRUE)
+sd(BMIS_loving_2, na.rm = TRUE)
+sd(BMIS_fedup_1, na.rm = TRUE)
+sd(BMIS_fedup_2, na.rm = TRUE)
+```
+```{r Histograms for Emotions}
+hist(BMIS_lively_1, na.rm = TRUE)
+hist(BMIS_lively_2, na.rm = TRUE)
+hist(BMIS_happy_1, na.rm = TRUE)
+hist(BMIS_happy_2, na.rm = TRUE)
+hist(BMIS_sad_1, na.rm = TRUE)
+hist(BMIS_sad_2, na.rm = TRUE)
+hist(BMIS_shame_1, na.rm = TRUE)
+hist(BMIS_shame_2, na.rm = TRUE)
+hist(BMIS_guilt_1, na.rm = TRUE)
+hist(BMIS_guilt_2, na.rm = TRUE)
+hist(BMIS_tired_1, na.rm = TRUE)
+hist(BMIS_tired_2, na.rm = TRUE)
+hist(BMIS_caring_1, na.rm = TRUE)
+hist(BMIS_caring_2, na.rm = TRUE)
+hist(BMIS_content_1, na.rm = TRUE)
+hist(BMIS_content_2, na.rm = TRUE)
+hist(BMIS_gloomy_1, na.rm = TRUE)
+hist(BMIS_gloomy_2, na.rm = TRUE)
+hist(BMIS_jittery_1, na.rm = TRUE)
+hist(BMIS_jittery_2, na.rm = TRUE)
+hist(BMIS_drowsy_1, na.rm = TRUE)
+hist(BMIS_drowsy_2, na.rm = TRUE)
+hist(BMIS_nervous_1, na.rm = TRUE)
+hist(BMIS_nervous_2, na.rm = TRUE)
+hist(BMIS_calm_1, na.rm = TRUE)
+hist(BMIS_calm_2, na.rm = TRUE)
+hist(BMIS_jittery_1, na.rm = TRUE)
+hist(BMIS_jittery_2, na.rm = TRUE)
+hist(BMIS_loving_1, na.rm = TRUE)
+hist(BMIS_loving_2, na.rm = TRUE)
+hist(BMIS_fedup_1, na.rm = TRUE)
+hist(BMIS_fedup_2, na.rm = TRUE)
+```
+```{r Shame/guilt Variables t1}
+wf_dt2$BMIS_guilt_1_center <- scale(wf_dt2$BMIS_guilt_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_guilt_1_Z <- scale(wf_dt2$BMIS_guilt_1, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_shame_1_center <- scale(wf_dt2$BMIS_shame_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_shame_1_Z <- scale(wf_dt2$BMIS_shame_1, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_sad_1_center <- scale(wf_dt2$BMIS_sad_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_sad_1_Z <- scale(wf_dt2$BMIS_sad_1, center = TRUE, scale = TRUE) #Z score
+```
+```{r Shame/guilt Variables t2}
+wf_dt2$BMIS_guilt_2_center <- scale(wf_dt2$BMIS_guilt_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_guilt_2_Z <- scale(wf_dt2$BMIS_guilt_2, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_shame_2_center <- scale(wf_dt2$BMIS_shame_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_shame_2_Z <- scale(wf_dt2$BMIS_shame_2, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_sad_2_center <- scale(wf_dt2$BMIS_sad_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_sad_2_Z <- scale(wf_dt2$BMIS_sad_2, center = TRUE, scale = TRUE) #Z score
+```
+```{r Shame/guilty statistics}
+(guilty_mean = mean(wf_dt2$BMIS_guilt, na.rm = TRUE))
+(guilty_sd = sd(wf_dt2$BMIS_guilt, na.rm = TRUE))
+(shame_mean = mean(wf_dt2$BMIS_shame, na.rm = TRUE))
+(shame_sd = sd(wf_dt2$BMIS_shame, na.rm = TRUE))
+```
+```{r Cronbach alpha for Shame and Sadness}
+guilt_shame_sad <- select(wf_dt2, BMIS_sad_2, BMIS_shame_2, BMIS_guilt_2) # dropping certain variables for the alpha
+psych::alpha(guilt_shame_sad)
+```
+```{r Z score combined variable}
+wf_dt2$guilt_shame_sad <- rowMeans(guilt_shame_sad)
+wf_dt2$guilt_shame_sad_center <- scale(wf_dt2$guilt_shame_sad, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$guilt_shame_sad_Z <- scale(wf_dt2$guilt_shame_sad, center = TRUE, scale = TRUE) #Z scores 
+```
+```{r}
+wf_dt2 <- wf_dt2 %>% mutate(shame_discrepancy = BMIS_shame_2_Z - BMIS_shame_1_Z) # higher scores indicate an increase in shame, lower scores indicate decrease in shame
+```
+```{r}
+# Independent samples t-test for BMIS_shame by condition
+(t_test_BMIS_shame_2 <- t.test(BMIS_shame_2 ~ bias, var.equal = TRUE, data = wf_dt2))
+
+# Calculating Cohen's d for BMIS_shame by condition
+(cohen_d_BMIS_shame_2 <- cohensD(BMIS_shame_2 ~ bias, data = wf_dt2))
+
+# Calculating standard deviations of BMIS_shame by condition
+(sd_by_condition <- aggregate(BMIS_shame_2 ~ bias, data = wf_dt2, FUN = sd))
+```
+```{r}
+# Independent samples t-test for BMIS_shame by condition
+(t_test_BMIS_shame_2 <- t.test(BMIS_shame_1 ~ bias, var.equal = TRUE, data = wf_dt2))
+
+# Calculating Cohen's d for BMIS_shame by condition
+(cohen_d_BMIS_shame_2 <- cohensD(BMIS_shame_1 ~ bias, data = wf_dt2))
+
+# Calculating standard deviations of BMIS_shame by condition
+(sd_by_condition <- aggregate(BMIS_shame_1 ~ bias, data = wf_dt2, FUN = sd))
+```
+```{r}
+# One-way ANOVA for SE_2 by bias
+summary((anova_SE2 <- aov(SE_2 ~ as.factor(bias)*as.factor(brand_race), data = wf_dt2)))
+
+# Tukey post hoc test
+(tukey_SE2 <- TukeyHSD(anova_SE2))
+
+```
+```{r}
+# One-way ANOVA for SE_2 by bias
+summary((anova_SE2 <- aov(SE_2 ~ as.factor(condition), data = wf_dt2)))
+
+# Tukey post hoc test
+(tukey_SE2 <- TukeyHSD(anova_SE2))
+
+```
+```{r}
+# Independent samples t-test for BMIS_shame by condition
+(t_test_BMIS_shame_2 <- t.test(SE_2 ~ bias, var.equal = TRUE, data = wf_dt2))
+
+# Calculating Cohen's d for BMIS_shame by condition
+(cohen_d_BMIS_shame_2 <- cohensD(SE_2 ~ bias, data = wf_dt2))
+
+# Calculating standard deviations of BMIS_shame by condition
+(sd_by_condition <- aggregate(SE_2 ~ bias, data = wf_dt2, FUN = sd))
+```
+```{r Self-esteem}
+wf_dt2$SE_2_Z <- scale(wf_dt2$SE_2, center = TRUE, scale = TRUE) #Z scores
+wf_dt2$SE_1_Z <- scale(wf_dt2$SE1, center = TRUE, scale = TRUE) #Z scores
+wf_dt2 <- wf_dt2 %>% mutate(SE_change = SE_2_Z - SE_1_Z) # higher scores indicate increases while negative score indicate decreases
+```
+
+
+### **4. Model Regressions**
+```{r}
+# One-way ANOVA for purchase by interaction
+summary((anova_purchase <- aov(purchase ~ as.factor(bias)*as.factor(brand_race), data = wf_dt2)))
+
+# Tukey post hoc test
+(tukey_purchase <- TukeyHSD(anova_purchase))
+
+```
+### **5. Shame Regressions**
+```{r shame and bias aware}
+summary(lm(BMIS_shame_2_Z ~ bias_aware_Z*as.factor(bias), wf_dt2)) #bias aware sig on its own and interaction
+```
+BA interacts with bias condition to predit increased shame. 
+
+```{r shame and defensiveness}
+summary(lm(BMIS_shame_2_Z ~ defensive_reverse_Z*as.factor(bias), wf_dt2)) #defensiveness on its own not sig
+```
+```{r shamet2 and shame t1}
+summary(lm(BMIS_shame_2_Z ~ BMIS_shame_1_Z, wf_dt2)) # t1 and t2 are somewhat related
+```
+```{r shamet2 and bias change}
+summary(lm(BMIS_shame_2_Z ~ bias_discrepancy_Z*bias_aware_Z, wf_dt2)) # bias discrepancy is what predicts shame, it is sig when bias condition is in the model, but they do not interact (close at .24 with a postive ineraction). Does interact with bias aware such that those who were more bias aware reported a larger discrepancy and ultimatley reported more shame
+```
+```{r shame change and bias change}
+summary(lm(shame_discrepancy ~ bias_discrepancy_Z, wf_dt2)) # larger bias discrepancy was associated with a greater change in shame, does not interact with as.factor bias
+```
+```{r shame change and bias + bias-awareness}
+summary(lm(shame_discrepancy ~ bias_aware_Z*as.factor(bias), wf_dt2)) # bias awareness by itself non sig, but interacts with bias condition to predict greater increases in shame 
+```
+```{r shame change and defensiveness}
+summary(lm(shame_discrepancy ~ defensive_reverse_Z, wf_dt2)) # defensiveness does not predict changes in shame 
+```
+```{r shame change and self-esteem}
+summary(lm(shame_discrepancy ~ SE_change, wf_dt2)) # defensiveness does not predict changes in shame 
+```
+### **6. Defensiveness Regressions**
+```{r defensiveness and bias awareness}
+summary(lm(defensive_reverse_Z ~ bias_aware_Z, wf_dt2)) 
+```
+BA interacts with bias condition to predict decreased defensiveness. 
+
+
+### **6. Purchase Intentions**
+
+```{r}
+summary(lm(purchase_Z ~ as.factor(bias)*as.factor(brand_race) + defensive_reverse_Z, wf_dt2))
+summary(lm(purchase_Z ~ as.factor(bias)*defensive_reverse_Z, wf_dt2))
+summary(lm(purchase_Z ~ defensive_reverse_Z*as.factor(bias)*as.factor(brand_race), wf_dt2))
+summary(lm(purchase_Z ~ defensive_reverse_Z + as.factor(brand_race), wf_dt2))
+summary(lm(purchase_Z ~ defensive_reverse_Z*as.factor(brand_race)*as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ defensive_reverse_Z*as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ defensive_reverse_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ defensive_reverse_Z, wf_dt2))
+summary(lm(rl_purchase ~ defensive_reverse_Z, wf_dt2))
+summary(lm(rr_purchase ~ as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ as.factor(bias), wf_dt2))
+```
+```{r}
+# Create the scatter plot with a line for the interaction effect
+ggplot(wf_dt2, aes(x = defensive_reverse_Z, y = rr_purchase, color = as.factor(bias))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, linetype = "solid", aes(group = as.factor(bias))) +
+  labs(title = "Scatter Plot of Defensive Reverse and RR Shop Intentions by Bias",
+       x = "Defensive Reverse",
+       y = "RR Purchase Intentions",
+       color = "Bias") +
+  theme_minimal()
+```
+
+
+The bias condition and the brand race condition interact to predict less support to purchase from black brands for people who are biased.This interaction does not hold when accounting for defensiveness. It seems to be the case that defensive responding is what is driving this effect where people who learn they are biased are slightly less support black brands than people who think they are not biased. It does seem like defensiveness in response to bias feedback does make participants more likely than others (no bias feedback) within the black brand condition to purchase from black brands. This is likely a form of morally affirming the self. Note that this pattern does not occur within the RL condition.
+
+Ex predicting purchase_Z:as.factor(brand_race)1                   0.35798    0.14791   2.420  0.01617 * 
+  defensive_reverse_Z                     -0.16558    0.05270  -3.142  0.00186 **
+  as.factor(bias)1:as.factor(brand_race)1 -0.02875    0.20196  -0.142  0.88691 
+
+Yet bias feedback does not impact willingness to purchase from a black business alone (i.e., RR_purchase), or in other words people learning that they were biased were not less likely to purchase from a black brand than others who did not learn that they were biased. Although they were more likely to purchase from a white business.    
+
+Ex predicting rr_purchase: defensive_reverse_Z                   -0.6959     0.2140  -3.252              0.00145 ** 
+                            as.factor(bias)1                       0.1384     0.3033   0.456              0.64878    
+                            defensive_reverse_Z:as.factor(bias)1   0.9874     0.3025   3.265              0.00139 ** 
+
+
+```{r}
+summary(lm(rr_purchase ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ BMIS_shame_2_Z*as.factor(bias), wf_dt2))
+summary(lm(purchase_Z ~ BMIS_shame_2_Z*as.factor(brand_race) + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ BMIS_shame_2_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ BMIS_shame_2_Z, wf_dt2))
+summary(lm(rl_purchase ~ BMIS_shame_2_Z, wf_dt2))
+```
+Shame does not seem to be related to purchase behavior at all. 
+
+```{r}
+summary(lm(rr_purchase ~ shame_discrepancy + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ shame_discrepancy*as.factor(bias), wf_dt2))
+summary(lm(purchase_Z ~ shame_discrepancy*as.factor(brand_race) + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ shame_discrepancy*as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ shame_discrepancy + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ shame_discrepancy + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ shame_discrepancy, wf_dt2))
+summary(lm(rl_purchase ~ shame_discrepancy, wf_dt2))
+```
+
+```{r}
+summary(lm(rr_purchase ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(lm(purchase_Z ~ bias_aware_Z*as.factor(brand_race)*as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_purchase ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_purchase ~ bias_aware_Z, wf_dt2))
+summary(lm(rl_purchase ~ bias_aware_Z, wf_dt2))
+```
+
+Bias awareness does not predict anything. 
+
+### **6. Shop Intentions**
+```{r main analysis}
+summary(lm(shop_intentions_Z ~ as.factor(bias)*as.factor(brand_race), wf_dt2)) # main interaction working, it is defensiveness driving this effect, whe defensiveness is included as a term in this model the effect vanishes, but defensiveness on its own is still negatively correlated with the dv, it also loses its sig for shame and se, but they are not signifgicant predictors of the dv
+```
+```{r shame and shopping intentions}
+summary(lm(shop_intentions ~ shame_discrepancy , wf_dt2)) # increases in shame from t1 to t2 are associated with increases in shopping attentions, this effect is for across all of the conditions 
+```
+
+
+```{r}
+summary(lm(shop_intentions_Z ~ as.factor(bias)*as.factor(brand_race) + defensive_reverse_Z, wf_dt2))
+summary(lm(shop_intentions_Z ~ defensive_reverse_Z*as.factor(bias), wf_dt2))
+summary(lm(shop_intentions_Z ~ defensive_reverse_Z*as.factor(bias)*as.factor(brand_race), wf_dt2))
+summary(lm(shop_intentions_Z ~ defensive_reverse_Z + as.factor(brand_race), wf_dt2))
+summary(lm(shop_intentions_Z ~ defensive_reverse_Z*as.factor(brand_race), wf_dt2))
+summary(lm(rr_shop_intentions ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ defensive_reverse_Z*as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ defensive_reverse_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ defensive_reverse_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ defensive_reverse_Z, wf_dt2))
+summary(lm(rl_shop_intentions ~ defensive_reverse_Z, wf_dt2))
+summary(lm(rr_shop_intentions ~ as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ as.factor(bias), wf_dt2))
+```
+```{r}
+# Create an interaction plot
+interaction.plot(
+  x.factor = wf_dt2$brand_race,
+  trace.factor = wf_dt2$bias,
+  response = wf_dt2$shop_intentions_Z,
+  type = "b", col = c("red", "blue"), pch = c(1, 2),
+  main = "Interaction Plot of Bias and Brand Race on Shop Intentions",
+  xlab = "Brand race",
+  ylab = "Shop Intentions",
+  legend = TRUE
+)
+```
+```{r}
+# Create the scatter plot with a line for the interaction effect
+ggplot(wf_dt2, aes(x = defensive_reverse_Z, y = shop_intentions_Z, color = as.factor(bias))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, linetype = "solid", aes(group = as.factor(bias))) +
+  labs(title = "Scatter Plot of Defensive Reverse and RR Shop Intentions by Bias",
+       x = "Defensive Reverse",
+       y = "RR Shop Intentions",
+       color = "Bias") +
+  theme_minimal()
+```
+
+
+Similar to purchase intentions, the main effect is being driven by defensiveness, those who learned that they are biased are less likely to purchase from a black brand than non-biased people, but when you account for this effect it vanishes. What you see when you examine the relationship between defensiveness and bias feedback is that those who are in the bias feedback condition are do not change in their shopping intentions the more defensive they are, while those in the no bias condition become more defensive.
+```{r}
+summary(lm(rr_shop_intentions ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ BMIS_shame_2_Z*as.factor(bias) + defensive_reverse_Z, wf_dt2))
+summary(lm(shop_intentions_Z ~ BMIS_shame_2_Z*as.factor(brand_race) + as.factor(bias), wf_dt2))
+summary(lm(shop_intentions_Z ~ BMIS_shame_2_Z*as.factor(brand_race), wf_dt2))
+summary(lm(shop_intentions_Z ~ BMIS_shame_2_Z*as.factor(bias) + defensive_reverse_Z, wf_dt2))
+summary(lm(rl_shop_intentions ~ BMIS_shame_2_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ BMIS_shame_2_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ BMIS_shame_2_Z, wf_dt2))
+summary(lm(rl_shop_intentions ~ BMIS_shame_2_Z, wf_dt2))
+```
+Shame does not seem to be related to purchase behavior at all. 
+
+```{r}
+summary(lm(rr_shop_intentions ~ shame_discrepancy + as.factor(bias) + defensive_reverse_Z, wf_dt2))
+summary(lm(rr_shop_intentions ~ shame_discrepancy*as.factor(bias) + defensive_reverse_Z, wf_dt2))
+summary(lm(rr_shop_intentions ~ shame_discrepancy*as.factor(bias), wf_dt2))
+summary(lm(shop_intentions_Z ~ shame_discrepancy*as.factor(brand_race) + as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ shame_discrepancy*as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ shame_discrepancy + as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ shame_discrepancy + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ shame_discrepancy, wf_dt2))
+summary(lm(rl_shop_intentions ~ shame_discrepancy, wf_dt2))
+```
+
+```{r}
+summary(lm(rr_shop_intentions ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(lm(shop_intentions_Z ~ bias_aware_Z*as.factor(brand_race)*as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rl_shop_intentions ~ bias_aware_Z + as.factor(bias), wf_dt2))
+summary(lm(rr_shop_intentions ~ bias_aware_Z, wf_dt2))
+summary(lm(rl_shop_intentions ~ bias_aware_Z, wf_dt2))
+```
+### **7. Word of Mouth**
+```{r}
+summary(lm(wom_Z ~ as.factor(bias)*as.factor(brand_race), wf_dt2)) # main interaction working, it is defensiveness driving this effect, whe defensiveness is included as a term in this model the effect vanishes, but defensiveness on its own is still negatively correlated with the dv, it also loses its sig for shame and se, but they are not signifgicant predictors of the dv
+```
+```{r}
+summary(lm(wom_Z ~ shame_discrepancy, wf_dt2)) # shame does not predict it neither does shame change, and it doesn't interact with anything to predict it
+```
+```{r}
+summary(lm(wom_Z ~ defensive_reverse_Z*as.factor(brand_race), wf_dt2)) # defensiveness does predict it
+```
+```{r}
+summary(lm(wom_Z ~ SE_change, wf_dt2)) # self-esteem change does not
+```
+```{r}
+summary(lm(wom_Z ~ bias_discrepancy, wf_dt2)) # BD does not
+```
+```{r}
+summary(lm(wom_Z ~ bias_aware_Z*as.factor(brand_race)*as.factor(bias), wf_dt2)) # BA does not
+```
+
+
+
+### *** Correlation Matrices ****
+```{r}
+colnames(wf_dt2)
+# Calculate correlation between variables
+cor_matrix <- wf_dt2 %>%
+select(
+  "BMIS_shame_2_Z",
+  "defensive_reverse_Z",
+  "bias_aware_Z",
+  "guilt_shame_sad_Z",
+  "SE_2_Z",
+  "shop_intentions",
+  "wom",
+  "purchase",
+  "polit_affil_cont_1",
+  "rl_shop_intentions",
+  "rl_purchase",
+  "rl_wom",
+  "rr_shop_intentions",
+  "rr_purchase",
+  "rr_wom") %>%
+  cor(use = "pairwise.complete.obs")
+
+# Create a function to calculate p-values
+get_p_value <- function(x, y) {
+  cor_test <- cor.test(x, y, method = "pearson")
+  return(cor_test$p.value)
+}
+
+# Calculate p-values for the correlations
+p_values <- outer(colnames(cor_matrix), colnames(cor_matrix), 
+                   Vectorize(function(x, y) get_p_value(cor_matrix[, x], cor_matrix[, y])))
+
+# Create a dataframe for the correlation values and p-values
+corr_data <- data.frame(variables = rep(colnames(cor_matrix), each = ncol(cor_matrix)),
+                        others = rep(colnames(cor_matrix), ncol(cor_matrix)),
+                        corr_values = as.vector(cor_matrix),
+                        p_value = as.vector(p_values))
+
+# Create a function to add asterisks based on p-values
+add_asterisk <- function(p_value) {
+  if (p_value < 0.05) {
+    return("*")
+  } else {
+    return("")
+  }
+}
+
+# Apply the function to generate the asterisk labels
+corr_data$asterisks <- sapply(corr_data$p_value, add_asterisk)
+
+# Create a heatmap for the correlation matrix with labels and significance asterisks
+heatmap_plot <- ggplot(data = corr_data, aes(x = variables, y = others, fill = corr_values)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%.2f", corr_values)), color = "black", size = 3) +  # Display correlation values as labels
+  geom_text(aes(label = asterisks), color = "red", size = 5) +  # Display significance asterisks
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", 
+                       midpoint = 0, limits = c(-1, 1)) +
+  labs(title = "Correlation Heatmap",
+       x = "Variables",
+       y = "Other Variables") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Display the heatmap
+print(heatmap_plot)
+```
+```{r saving correlation matrix}
+# Install and load the writexl package if not already installed
+# install.packages("writexl")
+library(writexl)
+
+# Specify the file path where you want to save the Excel file
+excel_file_path <- "correlation_matrix.xlsx"
+
+# Write the correlation matrix to an Excel sheet
+write_xlsx(corr_data, path = excel_file_path)
+
+# Display the file path to confirm where the Excel file is saved
+excel_file_path
+
+```
+```{r}
+old_data <- wf_dt2
+```
+

@@ -1,0 +1,256 @@
+---
+title: "White Fragility & Moral Affirmation S2"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+# Loading packages
+
+```{r Packages, results='hide'}
+library(ggpubr)
+library(psych)
+library(tidyverse)
+library(dplyr)
+library(readr)
+library(corrplot)
+library(readxl)
+library(ggplot2)
+library(effectsize)
+library(lsr)
+library(interactions)
+library("emmeans")
+options(scipen = 100)
+```
+
+# Data Management
+
+```{r Data, results='hide'}
+wf_dt2 <- read_csv("~/Documents/GitHub/Buying-Black/Buying Black and Moral Affirmation/Data/wf_maS3.csv")
+```
+```{r creating condition variables, results='hide'}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    condition = rowSums(select(., control_white, control_black, nogap_white, nogap_black, gap_black, gap_white), na.rm = TRUE)
+  )
+factor(wf_dt2$condition)
+```
+
+
+# Defensiveness --
+
+```{r Cronbach alpha for Defensiveness, results='hide'}
+defensive <- select(wf_dt2, 39:42)
+psych::alpha(defensive)
+```
+```{r Defensiveness Variables, results='hide'}
+wf_dt2$defensive <- rowMeans(wf_dt2[,39:42]) # creating defensiveness variable
+myscale <- 1:7 #defining scale to reverse defensivness variable
+wf_dt2 <- wf_dt2 %>%
+  mutate(defensive_reverse = min(myscale) - defensive + max(myscale)) # reversing defensivness scale
+wf_dt2$defensive_reverse_centered <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$defensive_reverse_Z <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = TRUE) # z score defensiveness 
+```
+
+## Defensiveness across all of the conditions. It seems to be the case, that the gap condition is eliciting the least amount of defensiveness, upon examination of the summary responses, it seems like participants really beleived what we laid out regarding redlining, and felt that the statstics really backed it up.
+
+0 = control, 1 = no gap, 2 = gap.
+
+```{r Defensiveness across conditions}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_defensive_reverse = mean(defensive_reverse, na.rm = TRUE))
+summary(lm(defensive_reverse ~ as.factor(condition), wf_dt2))
+```
+
+# Affective responses to the conditions
+
+## Filtered dataset that consist of only the no gap and gap conditions (without control)
+
+```{r}
+# Filter the data for levels 1 and 2
+filtered_wf_dt2 <- wf_dt2 %>%
+  filter(condition %in% c(1, 2))
+```
+
+### The gap condition is associated with increased sadness post-feedback.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_sad = mean(BMIS_sad_2, na.rm = TRUE))
+summary(lm(BMIS_sad_2 ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### The gap condition had a more pessimistic tone.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_tone = mean(article_tone, na.rm = TRUE))
+summary(lm(article_tone ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### The gap condition had a more negative tone, the scale for this is weird so disregard the scale, I need to change it.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_sentiment = mean(article_sentiment, na.rm = TRUE))
+summary(lm(article_sentiment ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People felt worse after reading the gap article.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_feel = mean(article_feel, na.rm = TRUE))
+summary(lm(article_feel ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People reported more shame after reading the gap article.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_shame = mean(BMIS_shame_2, na.rm = TRUE))
+summary(lm(BMIS_shame_2 ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People reported more guilt after reading the gap article.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_guilt = mean(BMIS_guilt_2, na.rm = TRUE))
+summary(lm(BMIS_guilt_2 ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People were less defensive after reading the gap article.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_defensive = mean(defensive_reverse, na.rm = TRUE))
+summary(lm(defensive_reverse ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People were more outraged after reading the gap article.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_outraged = mean(BMIS_outraged_2, na.rm = TRUE))
+summary(lm(BMIS_outraged_2 ~ as.factor(condition), filtered_wf_dt2))
+```
+
+### People were no more or less empathetic in the gap condition.
+
+```{r}
+filtered_wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_empathetic = mean(BMIS_empathetic_2, na.rm = TRUE))
+summary(lm(BMIS_empathetic_2 ~ as.factor(condition), filtered_wf_dt2))
+```
+
+## Non-Filtered dataset that consist of only the no gap and gap conditions (without control)
+
+### Sadness across all conditions.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_sad = mean(BMIS_sad_2, na.rm = TRUE))
+summary(lm(BMIS_sad_2 ~ as.factor(condition), wf_dt2))
+```
+
+### The no gap condition was the most optimistic, while the gap condition was just a bit more pessimistic than the control condition.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_tone = mean(article_tone, na.rm = TRUE))
+summary(lm(article_tone ~ as.factor(condition), wf_dt2))
+```
+
+### The gap condition had a more negative tone, the scale for this is weird so disregard the scale, I need to change it. The no gap condition is by far the most positve.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_sentiment = mean(article_sentiment, na.rm = TRUE))
+  summary(lm(article_sentiment ~ as.factor(condition), wf_dt2))
+```
+
+### People felt worse after reading the gap article, a trend is showing up where the no gap condition seems to be really positive.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_feel = mean(article_feel, na.rm = TRUE))
+  summary(lm(article_feel ~ as.factor(condition), wf_dt2))
+```
+
+### Shame.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_shame = mean(BMIS_shame_2, na.rm = TRUE))
+summary(lm(BMIS_shame_2 ~ as.factor(condition), wf_dt2))
+```
+
+### Guilt.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_guilt = mean(BMIS_guilt_2, na.rm = TRUE))
+summary(lm(BMIS_guilt_2 ~ as.factor(condition), wf_dt2))
+```
+
+### People were no more signicantly outraged than the control condition after reading the gap, and were much less outraged after reading the nogap article.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_outraged = mean(BMIS_outraged_2, na.rm = TRUE))
+  summary(lm(BMIS_outraged_2 ~ as.factor(condition), wf_dt2))
+```
+
+### People were no more or less empathetic in the gap condition.
+
+```{r}
+wf_dt2 %>%
+  group_by(condition) %>%
+  summarize(mean_empathetic = mean(BMIS_empathetic_2, na.rm = TRUE))
+summary(lm(BMIS_empathetic_2 ~ as.factor(condition), wf_dt2))
+```
+
+## Public Collective Self-Esteem and Affect at T2
+
+### Greater negative affect is associated with lower beleif in public regard of collective american identity.
+
+```{r}
+summary(lm(BMIS_shame_2 ~ public_CSE2, wf_dt2))
+summary(lm(BMIS_outraged_2 ~ public_CSE2, wf_dt2))
+summary(lm(BMIS_angry_2 ~ public_CSE2, wf_dt2))
+```
+
+## Private Collective Self-Esteem and Affect at T2
+
+### This scale is reversed, so affect is associated with greater regret in collective american identity.
+
+```{r}
+summary(lm(BMIS_shame_2 ~ private_CSE1...58, filtered_wf_dt2))
+summary(lm(BMIS_outraged_2 ~ private_CSE1...58, filtered_wf_dt2))
+summary(lm(BMIS_angry_2 ~ private_CSE1...58, filtered_wf_dt2))
+```

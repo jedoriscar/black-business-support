@@ -1,0 +1,62 @@
+---
+title: "White Fragility & Moral Affirmation S3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+# Personal Self-Esteem after reading article
+## Affect
+```{r}
+summary(lm(SE_1_Z ~ BMIS_angry_1_Z, wf_dt2))
+summary(lm(SE_1_Z ~ BMIS_shame_1_Z, wf_dt2))
+summary(lm(SE_1_Z ~ BMIS_guilt_1_Z, wf_dt2))
+summary(lm(SE_1_Z ~ BMIS_outraged_1_Z, wf_dt2))
+summary(lm(SE_1_Z ~ article_tone_Z, wf_dt2))
+summary(lm(SE_1_Z ~ article_feel_Z, wf_dt2))
+summary(lm(SE_1_Z ~ article_sentiment_Z, wf_dt2))
+summary(lm(SE_1_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(SE_1_Z ~ defensive_reverse_Z + BMIS_angry_1_Z + BMIS_shame_1_Z + BMIS_outraged_1_Z + BMIS_sad_1_Z, wf_dt2))
+```
+
+#### Negative Affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.25) is related to lower personal self-esteem, so is defensiveness and it is very robust as the effect holds even when controlling for all of the variables. 
+
+# Public Collective Self-Esteem after reading article
+## Affect
+```{r}
+summary(lm(public_CSE1_Z ~ BMIS_angry_1_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ BMIS_shame_1_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ BMIS_guilt_1_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ BMIS_outraged_1_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ article_tone_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ article_feel_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ article_sentiment_Z, wf_dt2))
+summary(lm(public_CSE1_Z ~ article_condition, wf_dt2))
+summary(lm(public_CSE1_Z ~ defensive_reverse_Z + BMIS_angry_1_Z + BMIS_shame_1_Z + BMIS_outraged_1_Z + BMIS_sad_1_Z, wf_dt2))
+```
+
+#### Negative Affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.29) is related to lower public collective self-esteem (if you think others have a postive image of White Americans), so is defensiveness and it is very robust as the effect holds even when controlling for all of the variables. 
+
+
+# Private Collective Self-Esteem after reading article
+## Affect
+```{r}
+summary(lm(private_CSE1_Z ~ BMIS_angry_1_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ BMIS_shame_1_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ BMIS_guilt_1_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ BMIS_outraged_1_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ article_tone_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ article_feel_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ article_sentiment_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(private_CSE1_Z ~ defensive_reverse_Z + BMIS_angry_1_Z + BMIS_shame_1_Z + BMIS_outraged_1_Z + BMIS_sad_1_Z, wf_dt2))
+```
+
+#### Negative Affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.25) is related to lower private collective self-esteem (personal self-esteem regarding White Americans), but not defensiveness. 

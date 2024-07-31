@@ -1,0 +1,327 @@
+---
+title: "White Fragility & Moral Affirmation Study 3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+# Initial Paths in the MFM Model
+
+::: callout-note
+## Defensiveness and Systemic Racism
+
+No significant association found between the wealth gap article and increased defensiveness.
+
+## Affect and Systemic Racism
+
+**Sadness:** Wealth gap article induces the most sadness.
+
+**Optimism/Pessimism:** No gap condition is most optimistic, while the gap condition is more pessimistic than the control condition.
+
+**Tone Analysis:** Gap condition has the most negative tone, whereas the no gap condition exhibits the most positive tone.
+
+**Sentiment**: Individuals feel worse after reading the gap article, but the no gap article leads to the most positive emotions.
+
+**Specific Emotions (Shame, Guilt, Outrage):** Gap condition induces the highest levels of shame, guilt, and outrage, while the no gap and control conditions yield similar amounts of these emotions.
+
+**Empathy:** No discernible difference in empathy across conditions.
+:::
+
+# Self Protective/Reflective Pathways
+
+::: callout-note
+## Bias-Awareness, Affect, and Defensiveness:
+
+Moderation Analysis:
+
+-   Bias-awareness does not significantly moderate the relationship between affect and article condition.
+
+-   It almost moderates the relationship with defensiveness (β = 0.07), indicating that increased bias-awareness is associated with decreased defensiveness.
+:::
+
+::: callout-note
+## Color-Blind Ideology, Affect, and Defensiveness:
+
+Moderation Analysis:
+
+-   Color-blind ideology moderates the relationship between bias feedback and affect, such that racially color-blind ideology endorsement is associated with less affect after bias feedback.
+
+    ![](images/cb_outrage.png)
+
+-   It also moderates the relationship with defensiveness, indicating that those who endorse color-blind racial ideology respond more defensively to the wealth gap article.
+
+    ![](images/cb_defensiveness.png)
+:::
+
+::: callout-note
+## Collective Narcissism, Affect, and Defensiveness:
+
+Moderation Analysis:
+
+-   Collective Narcissism moderates the relationship between article condition and outrage/sadness, such that those higher in collective narcissism are less likely to report outrage/sadness.
+
+-   It does not moderate the relationship with defensiveness.
+:::
+
+::: callout-note
+## Social Dominance Orientation, Affect, and Defensiveness:
+
+Moderation Analysis:
+
+-   Social Dominance Orientation moderates the relationship between article condition and outrage/sadness/shame/guilt, such that those higher in social dominance orientation are less likely to report these affects.
+
+-   It also moderates the relationship with defensiveness, indicating that those who endorse social dominance orientation are less likely to report affect and more likely to respond defensively when reading about the racial wealth gap.
+:::
+
+::: callout-note
+## Racial Centrality, Affect, and Defensiveness:
+
+Moderation Analysis:
+
+-   Racial centrality generally does not moderate any of the relationships.
+:::
+
+::: callout-note
+## Public & Private Regard, Affect, and Defensiveness:
+
+Public Regard Moderation Analysis:
+
+-   People high in public regard felt sadder, more pessimistic, and found the article less promising when reading the racial gap article.
+
+-   Public regard did not moderate the relationship between defensiveness or any of the other affective variables.
+
+Private Regard Moderation Analysis:
+
+-   People with high private regard for White Americans found the article to be more pessimistic and were more defensive.
+
+-   Private regard did not moderate the relationship between defensiveness or any of the other affective variables.
+
+    ![](images/pr_defensiveness.png)
+:::
+
+::: callout-note
+## Public Awareness & Normative Pressure, Affect, and Defensiveness:
+
+Public Awareness Moderation Analysis:
+
+-   People who thought that Americans were generally aware of racial issues felt sadder and found the article more pessimistic.
+
+-   Public awareness did not moderate the relationship between defensiveness or any of the other affective variables.
+
+Normative Pressure Moderation Analysis:
+
+-   Higher normative pressure to be aware of racial biases leads to more shame when reading about the racial wealth gap.
+
+-   Those who feel normative pressure are less defensive and report more shame and guilt when reading about racial inequality.
+
+    ![](images/np_shame.png)
+:::
+
+::: callout-note
+## Discrimination Concern, Affect, and Defensiveness:
+
+Discrimination Concern Moderation Analysis:
+
+-   Discrimination Concern moderates the relationship between all affect variables and article condition.
+
+-   Those who consider racial discrimination to be a problem are more likely to report negative affect when reading about the racial inequality gap and less likely to respond defensively.
+
+    ![](images/dc_shame-02.png)
+
+    ![](images/dc_defense-01.png)
+:::
+
+::: callout-note
+## Racial Climate/Interracial Contact, Affect, and Defensiveness:
+
+Racial Climate Moderation Analysis:
+
+-   Racial Climate does not moderate any of the variables.
+
+Interracial Contact Moderation Analysis:
+
+-   Interracial contact is associated with lower guilt after reading the article.
+:::
+
+# Self-Revision
+
+::: callout-note
+## Personal Self-Esteem:
+
+-   Negative affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.25) is related to lower personal self-esteem.
+
+-   Defensiveness is also associated with lower personal self-esteem, and this effect holds even when controlling for all other variables.
+:::
+
+::: callout-note
+## Public Self-Esteem:
+
+-   Negative affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.29) is related to lower public collective self-esteem (believing others have a positive image of White Americans).
+
+-   Defensiveness is also associated with lower public collective self-esteem, and this effect remains robust even when controlling for all other variables.
+:::
+
+::: callout-note
+## Private Collective Self-Esteem:
+
+-   Negative affect (anger, shame, guilt, outrage, article tone/feelings; B = -.15 to -.25) is related to lower private collective self-esteem (personal self-esteem regarding White Americans).
+
+-   Defensiveness is not significantly associated with private collective self-esteem.
+
+-   Article condition alone is not a significant predictor of private collective self-esteem.
+:::
+
+::: callout-important
+## Discussion of Self-Revision Findings:
+
+These results highlight the impact of negative affect and defensiveness on personal self-esteem, public collective self-esteem, and private collective self-esteem after reading the article on racial wealth gap. Negative affect consistently predicts lower self-esteem across these dimensions, suggesting a robust relationship. Defensiveness also plays a role in predicting lower personal and public collective self-esteem, emphasizing its influence in shaping individuals' perceptions. The article condition alone does not appear to be a significant predictor of collective self-esteem.
+
+***We find evidence for the self-reflective pathway, but not necessarily for the self-protective pathway. We should discuss these findings.***
+:::
+
+# Brand Support
+
+::: callout-note
+## Brand Race and Article Condition in Predicting Support for Brands:
+
+-   There is a main effect of brand race on support for Black brands, with people being more likely to support Black brands.
+
+-   However, there is no interaction between brand race and article condition, and no main effect with article condition alone.
+:::
+
+::: callout-note
+## Affect, Brand Race, Article Condition in Predicting Support for Brands:
+
+-   Defensiveness almost (.07) interacts with brand race and article condition to predict brand support.
+
+-   There is an interaction between brand race and outrage, predicting lower support for Black brands.
+
+-   None of the affective variables (anger, shame, guilt, etc.) predict brand support individually.
+
+-   Defensiveness is the only variable that, on its own, predicts brand support (not accounting for race; B = -.32).
+
+-   Defensiveness does not interact (.07) with brand race to predict brand support, although there is an almost three-way interaction.
+:::
+
+::: callout-caution
+## Color-blind Racial Ideology, Brand Race, Article Condition, in Predicting Support for Brands:
+
+-   Color-blind ideology is associated with lower support for Black brands (using the black brand support variable).
+
+-   However, it does not interact with brand race (likely a power issue).
+:::
+
+::: callout-note
+## Bias-Awareness, Brand Race, Article Condition in Prediciting Support for Brands:
+
+-   Bias-awareness does not predict support for brands and does not interact with article condition or brand race.
+:::
+
+::: callout-note
+## Discrimination Concern, Brand race, Article Condition in Predicting Support for Brands:
+
+-   Discrimination concern (measured by Devine et al.'s scale) is associated with increased support for Black brands.
+
+-   It interacts with the brand race variable to show increased support for brands.
+
+    ![](images/dc_support.png)
+
+-   There is almost (.07) a three-way interaction between article condition, discrimination concern, and brand race, suggesting increased support for Black brands after reading about the racial wealth gap.
+:::
+
+::: callout-note
+## Misc Findings/Null:
+
+**Collective Narcissism, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+**Main Effects:**
+
+-   Collective Narcissism positively predicts Black support (.11) but does not interact with any of the variables to predict it.
+
+**Social Dominance Orientation, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+**Main Effects:**
+
+-   Social Dominance Orientation (SDO) negatively predicts Black support (.11) but does not interact with any of the variables to predict it.
+
+**Racial Centrality, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+-   No Main Effects or Interactions Found
+
+**Private Regard, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+-   No Main Effects or Interactions Found
+
+**Public Regard, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+-   No Main Effects or Interactions Found
+
+**Public Awareness, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+-   No Main Effects or Interactions Found
+
+**Normative Pressure, Brand Race, Bias Feedback in Predicting Support for Brands**
+
+-   **N**o Main Effects or Interactions Found
+:::
+
+::: callout-note
+## Black Brand Items, Brand Race, Article Condition in Predicting Support for Black Brands:
+
+### **Main Effects:**
+
+-   People who think that Black brands have a positive impact on society are more likely to purchase from Black brands.
+
+-   However, those who say they seek Black brands are less likely to purchase from them after receiving feedback suggesting bias.
+
+### **Interaction Effects:**
+
+-   Bias-aware nd discrimination-concerned people or those who seek out brand-owner racial identities are more likely to seek Black brands and think that purchasing from them has a positive impact.
+
+-   Endorsement of racially color-blind ideology and conservatism is associated with the opposite effect.
+
+-   Bias-aware and discrimination-concerned people are not more or less likely to have purchased from a Black brand in the past.
+
+-   Color-blind ideology and political affiliation are associated with a lower likelihood of having purchased from a Black brand in the past.
+:::
+
+# Self-Revision and Affect After Brand Support 
+
+::: callout-note
+## Personal Self-Esteem After Brand Support:
+
+-   There is a relationship between defensiveness, article condition, and brand race such that those who are more defensive after reading the racial wealth gap article in the black brand condition had higher public collective self-esteem.
+
+-   There is a significant interaction between article condition and defensiveness.
+:::
+
+::: callout-note
+## Public Collective Self-Esteem Change:
+
+-   No significant effects were found for changes in public self-esteem.
+:::
+
+::: callout-note
+## Private Collective Self-Esteem After Brand Support:
+
+-   There is a defensiveness \* article condition interaction such that people who are more defensive in the racial wealth gap condition report higher private collective self-esteem.
+:::
+
+::: callout-note
+## Affect After Brand Support:
+
+No significant effects were found for changes in affect after brand support.
+:::
+
+::: callout-important
+## Discussion 2:
+
+***It appears that defensiveness, especially in the context of reading about the racial wealth gap, plays a role in influencing self-esteem, both personally and collectively. However, these effects are not consistent across all dimensions of self-esteem or affect. Additionally, there seem to be nuanced interactions with other factors like brand race and article condition. The impact of brand support on public collective self-esteem and changes in public self-esteem remains inconclusive based on the analyses conducted.***
+:::

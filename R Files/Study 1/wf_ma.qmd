@@ -1,0 +1,546 @@
+---
+title: "White Fragility & Moral Affirmation"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+# Loading packages
+
+```{r Packages}
+library(ggpubr)
+library(psych)
+library(tidyverse)
+library(dplyr)
+library(readr)
+library(corrplot)
+library(readxl)
+library(ggplot2)
+library(effectsize)
+library(lsr)
+library(interactions)
+library("emmeans")
+library(here)
+options(scipen = 100)
+```
+
+# Data Management
+
+```{r Data, results='hide'}
+wf_dt <- read_csv("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Data/wf_maS1.csv")
+```
+```{r Summary for Brief Mood Introspection variables t1}
+summary(wf_dt[,19:34])
+```
+```{r Summary for Brief Mood Introspection variables t2}
+summary(wf_dt[,69:84])
+```
+```{r Summary for Bias Awareness, Demographics, and IAT Variables}
+summary(wf_dt[,14:17])
+```
+```{r discrepancy variable for no bias}
+wf_dt$discrepancy_nb <- car::recode(wf_dt$discrepancy_nb, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$attentioncheck_nb <- car::recode(wf_dt$attentioncheck_nb, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$discrepancy_b <- car::recode(wf_dt$discrepancy_b, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'")
+wf_dt$attentioncheck_b <- car::recode(wf_dt$attentioncheck_b, "1 = '3'; 2 = '2'; 3 = '1'; 4 = '0'; 5 = '-1'; 6 = '-2'; 7 = '-3'") # larger scores indicate greater changes
+
+wf_dt$discrepancy_bias <- (wf_dt$attentioncheck_b - wf_dt$discrepancy_b) # deal with this later
+wf_dt$discrepancy_nobias <- ( wf_dt$attentioncheck_nb - wf_dt$discrepancy_nb) # deal with this later
+wf_dt$bias_discrepancy <- coalesce(wf_dt$discrepancy_bias, wf_dt$discrepancy_nobias) # positve scores mean that a person learned they were more biased towards white people than they expected and negative scores means they were less bias than they expected
+
+```
+```{r}
+wf_dt$bias_discrepancy_centered <- scale(wf_dt$bias_discrepancy, center = TRUE, scale = FALSE) # Centering
+wf_dt$bias_discrepancy_Z <- scale(wf_dt$bias_discrepancy, center = TRUE, scale = TRUE) # Z-score
+```
+```{r no bias attention check}
+wf_dt$attentioncheck_nb <- as.numeric(wf_dt$attentioncheck_nb)
+is.numeric(wf_dt$attentioncheck_nb)
+which(wf_dt$attentioncheck_nb == "1", arr.ind = TRUE) # seeing which people failed my attention checks
+which(wf_dt$attentioncheck_nb == "2", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "3", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "5", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "6", arr.ind = TRUE)
+which(wf_dt$attentioncheck_nb == "7", arr.ind = TRUE)
+```
+```{r bias attention check}
+wf_dt$attentioncheck_b <- as.numeric(wf_dt$attentioncheck_b)
+is.numeric(wf_dt$attentioncheck_b)
+which(wf_dt$attentioncheck_b == "4", arr.ind = TRUE) # seeing which people failed my attention checks
+which(wf_dt$attentioncheck_b == "2", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "3", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "5", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "6", arr.ind = TRUE)
+which(wf_dt$attentioncheck_b == "7", arr.ind = TRUE)
+```
+```{r creating data frame without people who missed attention checks}
+wf_dt2 <- wf_dt[-c(21, 167, 192, 325,
+77, 115, 208, 240, 247, 249,
+36, 116, 179, 212, 277, 283, 310, 318, 319,
+61, 81, 88, 301, 315, 323,
+82,
+254, 33, 59, 71, 121, 156, 207, 227, 243,
+2, 26, 69, 134, 200, 201, 251, 261, 272,
+78, 89, 118, 220,
+15
+),] # lost 49 to the attention check
+```
+```{r creating condition variables}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    condition = rowSums(select(., nobias_white, nobias_black, bias_white, bias_black), na.rm = TRUE)
+  )
+as.factor(wf_dt2$condition)
+```
+```{r creating bias and brand race variables}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    bias = case_when(
+      condition %in% c(0, 1) ~ 0,
+      condition %in% c(2, 3) ~ 1,
+      TRUE ~ NA_integer_
+    ),
+    brand_race = case_when(
+      condition %in% c(0, 2) ~ 0,
+      condition %in% c(1, 3) ~ 1,
+      TRUE ~ NA_integer_
+    )
+  )
+```
+```{r Shopping intentions}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    shop_intentions = rowSums(select(., rl_shop_intentions, rr_shop_intentions), na.rm = TRUE)
+  )
+```
+```{r Purchase}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    purchase = rowSums(select(., rl_purchase, rr_purchase), na.rm = TRUE)
+  )
+```
+```{r WOM}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    wom = rowSums(select(., rl_wom, rr_wom), na.rm = TRUE)
+  )
+```
+```{r Support variable alpha}
+brand_support_alpha <- select(wf_dt2, wom, purchase, shop_intentions) # dropping certain variables for the alpha
+psych::alpha(brand_support_alpha)
+```
+```{r Support varaible creation}
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    support = rowSums(select(., wom, purchase, shop_intentions), na.rm = TRUE)
+  )
+# Centering and z-score for the combined variable "black_support"
+wf_dt2 <- wf_dt2 %>%
+  mutate(
+    support_centered = scale(rowSums(select(., support), na.rm = TRUE), center = TRUE, scale = FALSE),
+    support_Z = scale(rowSums(select(., support), na.rm = TRUE), center = TRUE, scale = TRUE)
+  )
+```
+
+# Demographics
+
+```{r Race}
+race_proportions <- table(wf_dt2$race)/length(wf_dt2$race) # creating race table
+(race_percentages <- race_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Gender}
+gender_proportions <- table(wf_dt2$gender)/length(wf_dt2$gender) # creating gender table
+(gender_percentages <- gender_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Political Affiliation}
+political_proportions <- table(wf_dt2$polit_affil)/length(wf_dt2$polit_affil) # creating political table
+(political_percentages <- political_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r Education}
+education_proportions <- table(wf_dt2$education)/length(wf_dt2$education) # creating education table
+(education_percentages <- education_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r IAT previous}
+iatprev_proportions <- table(wf_dt2$iat_prev)/length(wf_dt2$iat_prev) # creating IAT previously table
+(iatprev_percentages <- iatprev_proportions*100) # multiplying the table by 100 to get percentages
+```
+```{r IAT racial}
+iatracial_proportions <- table(wf_dt2$iat_racial)/length(wf_dt2$iat_racial) # creating IAT racial table
+(iatracial_percentages <- iatracial_proportions*100) # multiplying the table by 100 to get percentages
+```
+# Variable Creation
+## Defensiveness Variable
+
+```{r Cronbach alpha for Defensiveness}
+defensive <- select(wf_dt2, 85:88)
+psych::alpha(defensive)
+```
+```{r Defensiveness Variables}
+wf_dt2$defensive <- rowMeans(wf_dt2[,85:88]) # creating defensiveness variable
+myscale <- 1:7 #defining scale to reverse defensivness variable
+wf_dt2 <- wf_dt2 %>%
+  mutate(defensive_reverse = min(myscale) - defensive + max(myscale)) # reversing defensivness scale
+wf_dt2$defensive_reverse_centered <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$defensive_reverse_Z <- scale(wf_dt2$defensive_reverse, center = TRUE, scale = TRUE) # z score defensiveness 
+```
+
+
+
+## Bias Awareness
+```{r Cronbach alpha for Bias Awareness}
+bias_aware <- select(wf_dt2, 14:17)
+psych::alpha(bias_aware)
+```
+```{r Bias Awareness Variables}
+wf_dt2$bias_aware <- rowMeans(wf_dt2[,14:17])
+wf_dt2$bias_aware_center <- scale(wf_dt2$bias_aware, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$bias_aware_Z <- scale(wf_dt2$bias_aware, center = TRUE, scale = TRUE) #Z scores 
+```
+
+
+
+## Emotions
+```{r Affect Variables t1}
+wf_dt2$BMIS_guilt_1_center <- scale(wf_dt2$BMIS_guilt_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_guilt_1_Z <- scale(wf_dt2$BMIS_guilt_1, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_shame_1_center <- scale(wf_dt2$BMIS_shame_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_shame_1_Z <- scale(wf_dt2$BMIS_shame_1, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_sad_1_center <- scale(wf_dt2$BMIS_sad_1, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_sad_1_Z <- scale(wf_dt2$BMIS_sad_1, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_angry_1_Z <- scale(wf_dt2$BMIS_angry_1, center = TRUE, scale = TRUE) #Z score
+```
+```{r Affect Variables t2}
+wf_dt2$BMIS_guilt_2_center <- scale(wf_dt2$BMIS_guilt_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_guilt_2_Z <- scale(wf_dt2$BMIS_guilt_2, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_shame_2_center <- scale(wf_dt2$BMIS_shame_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_shame_2_Z <- scale(wf_dt2$BMIS_shame_2, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_sad_2_center <- scale(wf_dt2$BMIS_sad_2, center = TRUE, scale = FALSE) #centering the variable
+wf_dt2$BMIS_sad_2_Z <- scale(wf_dt2$BMIS_sad_2, center = TRUE, scale = TRUE) #Z score
+wf_dt2$BMIS_angry_2_Z <- scale(wf_dt2$BMIS_angry_2, center = TRUE, scale = TRUE) #Z score
+```
+```{r Discrepancy Scores}
+wf_dt2 <- wf_dt2 %>% mutate(shame_t1t2_discrepancy = BMIS_shame_2_Z - BMIS_shame_1_Z) # higher scores indicate an increase in shame, lower scores indicate decrease in shame
+wf_dt2 <- wf_dt2 %>% mutate(guilt_t1t2_discrepancy = BMIS_guilt_2_Z - BMIS_guilt_1_Z) # higher scores indicate an increase in shame, lower scores indicate decrease in shame
+wf_dt2 <- wf_dt2 %>% mutate(angry_t1t2_discrepancy = BMIS_angry_2_Z - BMIS_angry_1_Z)
+```
+```{r Negative Moral Affect}
+negative_moral_affect_1 <- select(wf_dt2, BMIS_shame_1, BMIS_sad_1, BMIS_guilt_1, BMIS_fedup_1, BMIS_angry_1)
+# Select the columns representing the negative moral affect variables
+negative_moral_affect_2 <- select(wf_dt2, BMIS_shame_2, BMIS_sad_2, BMIS_guilt_2, BMIS_fedup_2, BMIS_angry_2)
+# Calculate Cronbach's alpha
+psych::alpha(negative_moral_affect_1)
+wf_dt2$negative_moral_affect_1 <- rowMeans(negative_moral_affect_1)
+wf_dt2$negative_moral_affect_1_Z <- scale(wf_dt2$negative_moral_affect_1, center = TRUE, scale = TRUE) #Z scores 
+# Calculate Cronbach's alpha
+psych::alpha(negative_moral_affect_2)
+wf_dt2$negative_moral_affect_2 <- rowMeans(negative_moral_affect_2)
+wf_dt2$negative_moral_affect_2_Z <- scale(wf_dt2$negative_moral_affect_2, center = TRUE, scale = TRUE) #Z scores
+wf_dt2 <- wf_dt2 %>% mutate(negative_moral_affect_t1t2_discrepancy = negative_moral_affect_2_Z - negative_moral_affect_1_Z)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## Self-esteem
+```{r Self-esteem}
+wf_dt2$SE_2_Z <- scale(wf_dt2$SE_2, center = TRUE, scale = TRUE) #Z scores
+wf_dt2$SE_1_Z <- scale(wf_dt2$SE1, center = TRUE, scale = TRUE) #Z scores
+wf_dt2 <- wf_dt2 %>% mutate(SE_t1t2_change = SE_2_Z - SE_1_Z) # higher scores indicate increases while negative score indicate decreases
+wf_dt2$SE_t1t2_change_Z <- scale(wf_dt2$SE_t1t2_change, center = TRUE, scale = TRUE) #Z scores
+```
+
+# Main Analyses (Moral Fragility Model)
+
+## **Personal Prejudice as a Moral Threat**
+#### **Defensiveness and Bias Feedback**
+
+```{r creating defensiveness box plot}
+(t_test_defensive_reverse <- t.test(defensive_reverse ~ bias, var.equal = TRUE, data = wf_dt2))
+(cohen_d_defensive_reverse <- cohensD(defensive_reverse ~ bias, data = wf_dt2))
+(sd_by_condition <- aggregate(defensive_reverse ~ bias, data = wf_dt2, FUN = sd))
+defensive_reverse_box <- ggplot(wf_dt2,                       # Create ggplot2 boxplot
+                  aes(x = as.factor(bias),
+                      y = defensive_reverse, fill = as.factor(bias))) +
+  geom_boxplot()
+defensive_reverse_box  +                                         # Add significance stars to plot
+  geom_signif(comparisons = list(c("0.0", "1.0")),
+              map_signif_level = TRUE) +
+labs(title="Defensiveness", subtitle = "Implicit bias evokes Defensiveness", x="Bias Feedback Condition", y = "Defensiveness") +
+scale_fill_manual(values=c("#999999", "#FFFFFF"), name = "Bias Feedback", labels = c("No Bias", "Bias")) +
+annotate(geom="text", x=1.5, y=7, label="n= 238, Cohen d = .58",
+              color="black") +
+stat_summary(fun.y=mean, geom="point", shape=18, size=5, color="wheat1", fill="wheat1")
+```
+
+##### This first main analysis finds that bias feedback does indeed lead to increased defensiveness.
+
+#### **Shame at Time 2 and Bias feedback**
+
+```{r creating shame box plot}
+(t_test_BMIS_shame_2 <- t.test(BMIS_shame_2 ~ bias, var.equal = TRUE, data = wf_dt2))
+(cohen_d_BMIS_shame_2 <- cohensD(BMIS_shame_2 ~ bias, data = wf_dt2))
+(sd_by_condition <- aggregate(BMIS_shame_2 ~ bias, data = wf_dt2, FUN = sd))
+shame_box <- ggplot(wf_dt2,                       # Create ggplot2 boxplot
+                  aes(x = as.factor(bias),
+                      y = BMIS_shame_2, fill = as.factor(bias))) +
+  geom_boxplot()
+shame_box  +                                         # Add significance stars to plot
+  geom_signif(comparisons = list(c("0.0", "1.0")),
+              map_signif_level = TRUE) +
+labs(title="Shame Differences", subtitle = "Implicit bias evokes shame", x="Bias Feedback Condition", y = "Shame") +
+scale_fill_manual(values=c("#999999", "#FFFFFF"), name = "Bias Feedback", labels = c("No Bias", "Bias")) +
+annotate(geom="text", x=1.5, y=4, label="n= 340, Cohen d =.40",
+              color="black") +
+stat_summary(fun.y=mean, geom="point", shape=18, size=5, color="wheat1", fill="wheat1")
+
+```
+##### Bias Feedback is associated with higher shame at time 2.
+
+#### **Shame Discrepancy between Time 1 and Time 2 (i.e, change in shame after bias feedback) Bias Feedback**
+
+```{r creating shame change box plot}
+(t_test_shame_t1t2_discrepancy <- t.test(shame_t1t2_discrepancy ~ bias, var.equal = TRUE, data = wf_dt2))
+(cohen_d_shame_t1t2_discrepancy <- cohensD(shame_t1t2_discrepancy ~ bias, data = wf_dt2))
+(sd_by_condition <- aggregate(shame_t1t2_discrepancy ~ bias, data = wf_dt2, FUN = sd))
+shame_box <- ggplot(wf_dt2,                       # Create ggplot2 boxplot
+                  aes(x = as.factor(bias),
+                      y = shame_t1t2_discrepancy, fill = as.factor(bias))) +
+  geom_boxplot()
+shame_box  +                                         # Add significance stars to plot
+  geom_signif(comparisons = list(c("0.0", "1.0")),
+              map_signif_level = TRUE) +
+labs(title="Change in Shame before and after Bias Feedback", subtitle = "Implicit bias evokes shame", x="Bias Feedback Condition", y = "Shame") +
+scale_fill_manual(values=c("#999999", "#FFFFFF"), name = "Bias Feedback", labels = c("No Bias", "Bias")) +
+annotate(geom="text", x=1.5, y=4, label="n= 340, Cohen d =.57",
+              color="black") +
+stat_summary(fun.y=mean, geom="point", shape=18, size=5, color="wheat1", fill="wheat1")
+
+```
+
+##### Bias feedback is associated with with increased shame from time 1 to time 2 (Z-scored).
+
+#### **Anger at Time 2 and Bias feedback**
+
+```{r Anger and bias feedback}
+(t_test_BMIS_angry_2 <- t.test(BMIS_angry_2 ~ bias, var.equal = TRUE, data = wf_dt2))
+(cohen_d_BMIS_angry_2 <- cohensD(BMIS_angry_2 ~ bias, data = wf_dt2))
+(sd_by_condition <- aggregate(BMIS_angry_2 ~ bias, data = wf_dt2, FUN = sd))
+```
+
+##### Bias feedback is associated with anger at time 2.
+
+#### **Anger Change and Bias feedback**
+
+```{r creating anger box plot}
+(t_test_angry_t1t2_discrepancy <- t.test(angry_t1t2_discrepancy ~ bias, var.equal = TRUE, data = wf_dt2))
+(cohen_d_angry_t1t2_discrepancy <- cohensD(angry_t1t2_discrepancy ~ bias, data = wf_dt2))
+(sd_by_condition <- aggregate(angry_t1t2_discrepancy ~ bias, data = wf_dt2, FUN = sd))
+shame_box <- ggplot(wf_dt2,                       # Create ggplot2 boxplot
+                  aes(x = as.factor(bias),
+                      y = angry_t1t2_discrepancy, fill = as.factor(bias))) +
+  geom_boxplot()
+shame_box  +                                         # Add significance stars to plot
+geom_signif(comparisons = list(c("0.0", "1.0")),
+              map_signif_level = TRUE) +
+labs(title="Change in Anger before and after Bias Feedback", subtitle = "Implicit bias evokes anger", x="Bias Feedback Condition", y = "Anger") +
+scale_fill_manual(values=c("#999999", "#FFFFFF"), name = "Bias Feedback", labels = c("No Bias", "Bias")) +
+annotate(geom="text", x=1.5, y=4, label="n= 338, Cohen d =.54",
+              color="black") +
+stat_summary(fun.y=mean, geom="point", shape=18, size=5, color="wheat1", fill="wheat1")
+
+```
+
+##### Bias Feedback is associated with increased anger between time and time 2.
+
+#### As predicted through the framework of the moral fragility model bias feedback does lead to increased self-reporting of shame and anger at time 2. The effect is even larger/apparent when you observe change in shame and anger from T1 to T2.
+
+## Predictors/Moderators of the Self-Protective (i.e., Defensiveness) and Self-Reflective (i.e., negative moral affect) Pathways
+
+### **Self-Reflective Pathway**
+
+#### Defensiveness and Affect
+```{r}
+summary(lm(angry_t1t2_discrepancy ~ defensive_reverse_Z, wf_dt2))
+summary(lm(BMIS_angry_2_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(BMIS_shame_2_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(BMIS_sad_2_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(BMIS_guilt_2_Z ~ defensive_reverse_Z, wf_dt2))
+```
+
+##### Defensiveness and shame are not linked with each other. Nor is defensiveness linked to any of the other negative emotions. However, defensiveness is linked with increases in anger (not shame) from t1 to t2 and anger at T2.
+
+#### **Bias-Awareness and Shame**
+
+```{r shame and bias awareness}
+summary(aware_shame_change <- lm(guilt_t1t2_discrepancy ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_anger_change <- lm(BMIS_shame_2_Z ~ bias_aware_Z, wf_dt2))
+emtrends(aware_shame_change, ~ as.factor(bias), var ="bias_aware_Z")
+```
+```{r plot of shame change by condition by bias awareness}
+ggplot(wf_dt2, aes(x = bias_aware_Z, y = BMIS_shame_2_Z, colour = as.factor(bias))) + # you have to choose betwen either colour or fill
+      geom_jitter() +
+      geom_point() +
+      scale_color_manual(values=c("azure4", "wheat3")) +
+      geom_smooth(method = "lm", se = FALSE) +
+      scale_shape_discrete(name  ="Condition",
+                          breaks=c("0", "1"),
+                         labels=c("No Bias", "Bias")) +
+      labs(colour = "Condition",                     # keeping it consistent with the first bubble
+      title = "Bias Awareness and Shame", 
+      subtitle = paste0("Bias aware participants experience greater shame after bias feedback"),
+      x = "Bias Awareness",
+      y = "Shame") +
+      annotate(geom="text", x=1.8, y=3, label="n = 241, β = .33",
+              color="navajowhite4")
+```
+
+We find evidence for the self-reflective path-way as bias-awareness moderates the relationship between bias feedback and shame/guilt, such that those who are more bias-aware are more likely to report shame/guilt in response to bias feedback. We also find evidence that bias-awareness is associated with increases in guilt from T1 to T2 (.06 with shame)
+
+#### **Bias-Awareness, Anger and Affect**
+```{r anger and bias awareness}
+summary(aware_anger_change <- lm(angry_t1t2_discrepancy ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_anger_change <- lm(BMIS_angry_2_Z ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_anger_change <- lm(negative_moral_affect_t1t2_discrepancy ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_anger_change <- lm(BMIS_sad_2_Z ~ bias_aware_Z*as.factor(bias), wf_dt2))
+```
+
+##### Bias-awareness does not moderate the relationship between bias-feedback and anger, but it does for guilt and negative affect broadly.
+
+#### **Bias Discrepancy and Affect**
+
+```{r}
+summary(lm(bias_discrepancy_Z ~ as.factor(bias), wf_dt2))
+summary(lm(negative_moral_affect_t1t2_discrepancy ~ bias_discrepancy_Z*as.factor(bias), wf_dt2))
+summary(lm(angry_t1t2_discrepancy ~ bias_discrepancy_Z*as.factor(bias), wf_dt2))
+summary(lm(shame_t1t2_discrepancy ~ bias_discrepancy_Z*as.factor(bias), wf_dt2))
+summary(lm(defensive_reverse_Z ~ bias_discrepancy_Z*as.factor(bias), wf_dt2))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### **Self-Protective Pathway**
+
+```{r}
+summary(lm(defensive_reverse_Z ~ bias_aware_Z*as.factor(bias) + BMIS_shame_2_Z, wf_dt2))
+summary(lm(defensive_reverse_Z ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_defense <- lm(defensive_reverse_Z ~ bias_aware_Z*as.factor(bias), wf_dt2))
+summary(aware_defense <- lm(defensive_reverse_Z ~ bias_aware_Z, wf_dt2))
+```
+
+##### Bias-awareness does not moderate the relationship between defensiveness and bias-feedback. That being said bias-awareness does correlate with lower defensiveness. It might be because bias-awareness was presented prior to participants taking the IAT and receivng feedback although it usually is at the end of the 
+
+#### Defensiveness and Self-Esteem Change Self-esteem change and defensiveness
+
+```{r}
+summary(lm(SE_t1t2_change_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(SE_t1t2_change_Z ~ BMIS_shame_2_Z, wf_dt2))
+summary(lm(SE_t1t2_change_Z ~ shame_t1t2_discrepancy, wf_dt2))
+summary(lm(SE_t1t2_change_Z ~ guilt_t1t2_discrepancy, wf_dt2))
+summary(lm(SE_t1t2_change_Z ~ angry_t1t2_discrepancy, wf_dt2))
+```
+
+#### Self-esteem at time 2 and Defensiveness at time 2
+
+```{r}
+summary(lm(angry_t1t2_discrepancy ~ defensive_reverse_Z, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z + BMIS_angry_2_Z, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z + BMIS_shame_2_Z, wf_dt2))
+summary(lm(SE_2_Z ~ BMIS_shame_2_Z, wf_dt2))
+summary(lm(SE_2_Z ~ defensive_reverse_Z + negative_moral_affect_2_Z, wf_dt2))
+```
+
+##### Defensiveness is linked to lower self-esteem at t2, but when you control for negative moral affect, and in particular anger, than this effect vanishes suggesting that it is anger that is really leading to the self-esteem drop. Defensiveness is never linked to a decrease in self-esteem from t1 to t2. Shame and anger are linked to lower self-esteem at t2 and a higher self-esteem drop from t1 to t2. Shame change from t1 to t2 is linked to an greater self-esteem change from t1 to t2.
+
+#### Predictors of Support for Brands
+
+#### Brand Race and Bias Feedback in predicting Support for Brands
+
+```{r}
+summary(lm(support_Z ~ as.factor(bias)*as.factor(brand_race), wf_dt2))
+```
+
+There is a main effect of brand race on support for Black brands, such that people were more likely to support Black brands. There is also a main effect for bias-feedback such that people who receive bias-feedback are more likely to support the businesses, but these variables do not interact. 
+
+#### Affect, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+wf_dt2$angry_category <- as.factor(ifelse(wf_dt2$angry_t1t2_discrepancy > 0, "+1", ifelse(wf_dt2$angry_t1t2_discrepancy < 0, "-1", "0")))
+summary(lm(support_Z ~ as.factor(brand_race)*BMIS_angry_2_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(brand_race)*BMIS_shame_2_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(brand_race)*BMIS_guilt_2_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(brand_race)*defensive_reverse_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(bias)*defensive_reverse_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(brand_race)*defensive_reverse_Z, wf_dt2))
+summary(anger <- lm(support_Z ~ as.factor(brand_race)*angry_t1t2_discrepancy, wf_dt2))
+summary(anger <- lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*angry_category, wf_dt2))
+```
+```{r}
+wf_dt2$angry_category <- as.factor(ifelse(wf_dt2$angry_t1t2_discrepancy > 0, "+1", ifelse(wf_dt2$angry_t1t2_discrepancy < 0, "-1", "0")))
+summary(lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*BMIS_angry_2_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*BMIS_shame_2_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*BMIS_guilt_2_Z, wf_dt2))
+summary(lm(support_Z ~ defensive_reverse_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(bias)*defensive_reverse_Z, wf_dt2))
+summary(lm(support_Z ~ as.factor(brand_race)*defensive_reverse_Z, wf_dt2))
+summary(anger <- lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*angry_t1t2_discrepancy, wf_dt2))
+summary(anger <- lm(support_Z ~ as.factor(bias)*as.factor(brand_race)*angry_category, wf_dt2))
+```
+
+```{r}
+# Create a new categorical variable for defensive_reverse_Z
+# Plot with customizations
+plot_model(
+  anger, 
+  type = "pred", 
+  terms = c("angry_category", "bias", "brand_race"),
+  title = "Relationship between Bias Feedback, Brand Race, and Increased Anger",
+  subtitle = "Subtitle goes here",
+  axis.title.x = "Anger (Z-Score)",
+  axis.title.y = "Brand Support (Z-Score)",
+  colors = c("azure4", "wheat3"),  # Customize colors
+  show.legend = TRUE,  # Show legend
+  legend.title = "Bias Feeddback",
+  legend.labels = c("Bias", "Brand Race", "Anger"),  # Legend labels
+  theme = theme_minimal())
+```
+##### Increased anger from t1 to t2 is linked to increased support for Black Brands after receiving bias feedback. Defensiveness interacts with bias-feedback to lead to increased support for brands. 
+
+
+
+
+
+
+

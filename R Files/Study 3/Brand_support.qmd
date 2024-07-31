@@ -1,0 +1,217 @@
+---
+title: "White Fragility & Moral Affirmation S3"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+
+### Predictors of Support for Brands
+
+#### Brand Race and Bias Feedback in predicting Support for Brands
+
+```{r}
+summary(lm(support_Z ~ article_condition, wf_dt2))
+summary(lm(support_Z ~ brand_race, wf_dt2))
+summary(lm(support_Z ~ brand_race*article_condition, wf_dt2))
+```
+
+There is a main effect of brand race on support for Black brands, such that people were more likely to support Black brands. There is not an interaction between brand race and article condition, nor is there a main effect with article condition. 
+
+#### Affect, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(support_Z ~ BMIS_angry_1_Z, wf_dt2))
+summary(lm(support_Z ~ BMIS_shame_1_Z, wf_dt2))
+summary(lm(support_Z ~ BMIS_guilt_1_Z, wf_dt2))
+summary(lm(support_Z ~ BMIS_outraged_1_Z, wf_dt2))
+summary(lm(support_Z ~ defensive_reverse_Z, wf_dt2))
+```
+```{r}
+summary(lm(support_Z ~ brand_race*article_condition*BMIS_angry_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*article_condition*BMIS_shame_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*article_condition*BMIS_guilt_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*article_condition*BMIS_outraged_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*article_condition*defensive_reverse_Z, wf_dt2))
+```
+```{r}
+summary(lm(support_Z ~ brand_race*BMIS_angry_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*BMIS_shame_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*BMIS_guilt_1_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*BMIS_outraged_1_Z + article_condition, wf_dt2))
+summary(lm(support_Z ~ brand_race*defensive_reverse_Z, wf_dt2))
+```
+```{r}
+summary(lm(support_Z ~ article_condition*BMIS_angry_1_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*BMIS_shame_1_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*BMIS_guilt_1_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*BMIS_outraged_1_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*defensive_reverse_Z, wf_dt2))
+```
+
+#### Defensiveness almost (.07) interacts with brand race and article condition to predict brand support. There is an interaction between brand race and outrage to predict lower-support for black brands. Importantly, none of the affective variables (anger, shame, guilt, etc.) predict brand support. Defensiveness is the only variable that on its lonesome predicts brand support (not accounting for race; B = -.32). Defensiveness does not interact with brand race to predict brand support although there is almsot that three-way interaction. 
+
+#### Color-Blind Ideology, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ color_blind_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*color_blind_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*color_blind_Z*article_condition, wf_dt2))
+```
+Color-blind ideology is associated with lower support for Black brands using the black brand support variable but it does not interact with brand race (likely a power issue). 
+
+##### As racial color-blind ideology endorsement increases, support for black brands decreases, but not for white brands (not interaction, just with black support variable). We do not find interaction effects with either article conditon or brand race. 
+
+### Bias-Awareness, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ bias_aware_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*bias_aware_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*bias_aware_Z, wf_dt2))
+```
+
+##### Bias-awareness does not predict support for brands, and does nto interact with article condition or brand race. 
+
+
+### Discrimination Concern, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ discrimination_concern_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*discrimination_concern_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*discrimination_concern_Z, wf_dt2))
+```
+```{r}
+dc_support <- ggplot(wf_dt2, aes(x = discrimination_concern_Z, y = support_Z, colour = brand_race)) + 
+  geom_jitter() +
+  geom_point() +
+  scale_color_manual(values=c("azure4", "wheat3", "powderblue")) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_shape_discrete(name  ="Condition",
+                       breaks=c("0", "1"),
+                       labels=c("No Bias", "Bias")) +
+  labs(colour = "Condition",                     
+       title = "Discrimination Concern and Black Business Support", 
+       subtitle = paste0("Discrimination Concern leads to more support for Black Buisnesses"),
+       x = "Discrimination Concern",
+       y = "Buisness Support") +
+  annotate(geom="text", x=1.0, y=3, label="n = 310, β = .18",
+           color="navajowhite4")
+ggsave("~/Documents/Buying-Black/Buying Black and Moral Affirmation/Plots/dc_support.png", dc_support)
+```
+
+
+#### Discrimination concern (Devine et al. scale that measures concern about discrimination towards Black Americans) is associated with increased support for black brands, and it interacts with the brand race variable to show increased support fo rbrands. There is almost (.07) a three-way interaction between article condition, discrimination concern, and brand race such that they are more likley to support black brands after reading about the racial wealth gap. This variable is a seemingly strong predictor. 
+
+### Collective Narcissm, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ collective_n_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*collective_n_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*collective_n_Z, wf_dt2))
+```
+
+#### Collective Narcissm postivley predicts black support (.11) but does interact with any of the variables to predict it. Very odd. 
+
+### Social Dominance Orientation, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ sdo_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*sdo_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*sdo_Z, wf_dt2))
+```
+
+#### SDO negativley predicts black support (.11) but does interact with any of the variables to predict it.
+
+### Racial Centrality, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ racial_centrality_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*racial_centrality_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*racial_centrality_Z, wf_dt2))
+```
+
+### Private Regard, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ private_regard_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*private_regard_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*private_regard_Z, wf_dt2))
+```
+
+### Public Regard, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ public_regard_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*public_regard_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*public_regard_Z, wf_dt2))
+```
+
+### Public Regard, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ public_aware_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*public_aware_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*public_aware_Z, wf_dt2))
+```
+
+### Normative Pressure, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+summary(lm(black_support_Z ~ norm_pressure_Z, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*norm_pressure_Z, wf_dt2))
+summary(lm(support_Z ~ brand_race*norm_pressure_Z, wf_dt2))
+```
+
+
+
+
+
+### Black Brands Items, Brand Race, Bias Feedback in Predicting Support for Brands
+
+```{r}
+# Centering and z-score for "shop_intentions"
+wf_dt2$blacklabel_influence_centered <- scale(wf_dt2$blacklabel_influence, center = TRUE, scale = FALSE) # Centering
+wf_dt2$blacklabel_influence_Z <- scale(wf_dt2$blacklabel_influence, center = TRUE, scale = TRUE) # Z-score
+# Centering and z-score for "shop_intentions"
+wf_dt2$blackbrand_seek_centered <- scale(wf_dt2$blackbrand_seek, center = TRUE, scale = FALSE) # Centering
+wf_dt2$blackbrand_seek_Z <- scale(wf_dt2$blackbrand_seek, center = TRUE, scale = TRUE) # Z-score
+```
+```{r}
+summary(lm(support_Z ~ brand_race*as.factor(purchase_blackbrand), wf_dt2))
+summary(lm(support_Z ~ brand_race*blacklabel_influence, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*blacklabel_influence, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*blackbrand_seek, wf_dt2))
+summary(lm(support_Z ~ article_condition*brand_race*as.factor(purchase_blackbrand), wf_dt2))
+```
+
+##### People who think that black brands have a positive impact on society are more likely to purchase from Black brands. That being said people who say that they seek black brands are less likely to purchase from black brands after receiving feedback suggesting that they are biased.
+
+```{r}
+summary(lm(brand_identity_Z ~ blacklabel_influence, wf_dt2))
+summary(lm(brand_identity_Z ~ blackbrand_seek, wf_dt2))
+summary(lm(blackbrand_seek ~ purchase_blackbrand, wf_dt2))
+summary(lm(blacklabel_influence ~ purchase_blackbrand, wf_dt2))
+```
+```{r}
+summary(lm(blacklabel_influence_Z ~ bias_aware_Z, wf_dt2))
+summary(lm(blackbrand_seek_Z ~ bias_aware_Z, wf_dt2))
+summary(glm(as.numeric(purchase_blackbrand) ~ bias_aware_Z, family = "binomial", data=wf_dt2))
+summary(lm(blacklabel_influence_Z ~ color_blind_Z, wf_dt2))
+summary(lm(blackbrand_seek_Z ~ color_blind_Z, wf_dt2))
+summary(glm(as.numeric(purchase_blackbrand) ~ color_blind_Z, family = "binomial", data=wf_dt2))
+summary(lm(blacklabel_influence_Z ~ polit_affil_cont_1, wf_dt2))
+summary(lm(blackbrand_seek_Z ~ polit_affil_cont_1, wf_dt2))
+summary(glm(as.numeric(purchase_blackbrand) ~ polit_affil_cont_1, family = "binomial", data=wf_dt2))
+summary(glm(as.numeric(purchase_blackbrand) ~ brand_identity_Z, family = "binomial", data=wf_dt2))
+```
+
+##### Bias-aware people/who seek out brand-owner racial identities are more likely to seek Black brands and think that purchasing from them has a positve impact, while endorsement of racially color-blind ideology and conservatisim is associated with the opposite affect. Bias-aware and discrimination concerned people are not more or less likley to have purchased from a black brand in the past. People who seek out brand-owner racial identity are more likley to have purchased from a black brand in the past, while color-blind ideology and poltiical affiliation is associated with a lower likelihood of having purchased from a black brand in the past.
+
+
