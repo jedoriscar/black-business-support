@@ -53,13 +53,13 @@ write.csv(unique_business_ids, file = here("Data/unique_business_ids.csv"))
 # Load the coded data from Excel
 coded_data <- read_excel(here("Data/unique_business_ids_labels.xlsx"))
 
-# Perform the join on the common column 'business_id'
-combined_data <- filtered_wf_dt_r %>%
+# Perform the join on the common column 'business_id' + 'user_id'
+combined_data <- combined_data %>%
   left_join(coded_data, by = "business_id")  %>% 
-  left_join(wf_dt_b, by = "business_id")  %>%
-  left_join(wf_dt_u, by = "business_id") 
+  left_join(wf_dt_b, by = "business_id") %>%
+  left_join(wf_dt_u, by = "user_id") %>%
+  left_join(wf_dt_t, by = "business_id") 
 
+save(combined_data, file = here("Data/combined_data.rda"))
 
-
-save(file = here("Data/"))
-
+View(wf_dt_b)
