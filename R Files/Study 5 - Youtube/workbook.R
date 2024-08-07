@@ -1,49 +1,36 @@
-top_words <- tidy(datastm, matrix = "beta") %>%
-  group_by(topic) %>%
-  top_n(10, beta) %>%
-  ungroup() %>%
-  select(topic, term, beta) %>%
-  arrange(topic, -beta)
-
-write.table(top_words, file = "datastm_terms.txt", sep = "\t", quote = FALSE, row.names = FALSE)
-
-
-# Estimate the effect of title on each topic
-datastm_effects <- estimateEffect(1:5 ~ 1,  # Covariate: title
-                                  stmobj = datastm,  # STM object
-                                  metadata = meta,  # Metadata
-                                  uncertainty = "None")  # No uncertainty estimation
-
-# Redirect the output to a text file
-sink("datastm_effects.txt")
-
-# Summarize the effects
-summary(datastm_effects)
-
-# Stop redirecting the output
-sink()
+#Black Business Support Regression Lines 
+# All Topics (descending order)
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(events_historical_mention), data = datagamma_combined))
+summary (lm(topic_5 ~ view_count + subscribers + likes + like_count + as.factor(political_affiliation_commentator), data = datagamma_combined))
+summary (lm(topic_4 ~ view_count + subscribers + likes + like_count + as.factor(racial_equality_colorblindness), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(events_recent_mention), data = datagamma_combined))
+summary (lm(topic_2 ~ view_count + subscribers + likes + like_count + as.factor(), data = datagamma_combined))
+summary (lm(topic_1 ~ view_count + subscribers + likes + like_count + as.factor(), data = datagamma_combined))
 
 
+# Topic 3: black, people, man, get, see, good, need, much, take, want 
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(events_historical_mention), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(racial_groups_mention), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(emotional_sadness_commentator), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(emotional_anger_commentator), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(racial_stereotypes_use), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(social_issues_mention), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(racial_equality), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(racial_equality_colorblindness), data = datagamma_combined))
+summary (lm(topic_3 ~ view_count + subscribers + likes + like_count + as.factor(awareness_discrimination_present), data = datagamma_combined))
 
-# Create a matrix of topic scores or values
-datagamma <- tidy(datastm, matrix = "gamma")
+# Topic 6: white, can, because, make, one, think, race, racist, american, never
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(events_recent_mention), data = datagamma_combined))
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(awareness_discrimination_present), data = datagamma_combined))
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(events_historical_mention), data = datagamma_combined))
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(racial_stereotypes_use), data = datagamma_combined))
 
-# Spread the topic scores across columns
-datagamma <- datagamma %>%
-  spread(key = topic, value = gamma)
+# Topic 5: video, love, trump, song, great, president, real, now, watch, vote 
+summary(lm(topic_5 ~ view_count + subscribers + likes + like_count + as.factor(racial_stereotypes_use), data = datagamma_combined))
+summary(lm(topic_6 ~ view_count + subscribers + likes + like_count + as.factor(emotional_anger_commentator), data = datagamma_combined))
 
-# Assuming 'meta' contains the metadata of the videos and has 6958 rows
-num_rows <- nrow(meta)  # Get the number of rows in the 'meta' dataframe
+datagamma_combined %>% ggplot(aes(x = topic_6)) + geom_density()
 
-# Make sure the number of rows matches between 'meta' and 'datagamma'
-if (num_rows == nrow(datagamma)) {
-  # Combine gamma values with metadata and comments
-  datagamma_combined <- cbind(meta, datagamma)
-  
-  # Rename columns if needed
-  colnames(datagamma_combined) <- c("video_title", "comment_text", paste0("topic_", 1:10))
-  
-  # 'datagamma_combined' now contains the metadata, comments, and corresponding gamma values
-} else {
-  print("Number of rows in 'meta' and 'datagamma' do not match.")
-}
+# Skim code 
+skim <- datagamma_combined %>% skim_without_charts()
+

@@ -1,0 +1,572 @@
+
+Call:
+estimateEffect(formula = 1:63 ~ 1, stmobj = datastm2, metadata = meta, 
+    uncertainty = "None")
+
+
+Topic 1:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0151924  0.0002027   74.95 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 2:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0165621  0.0001951    84.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 3:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01760274 0.00009899   177.8 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 4:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0170144  0.0001161   146.5 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 5:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0124448  0.0001596   77.98 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 6:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01241006 0.00003878     320 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 7:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0316943  0.0003404   93.11 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 8:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0097521  0.0001714   56.89 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 9:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0086571  0.0001311   66.02 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 10:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0093785  0.0001229    76.3 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 11:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01162378 0.00009736   119.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 12:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.02743781 0.00008025   341.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 13:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0224536  0.0002924    76.8 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 14:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01237414 0.00003629     341 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 15:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01944643 0.00009104   213.6 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 16:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0428536  0.0003991   107.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 17:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01408010 0.00008433     167 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 18:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0332417  0.0001607   206.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 19:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0136843  0.0001346   101.7 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 20:
+
+Coefficients:
+            Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.009797   0.000133   73.64 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 21:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0087332  0.0001031   84.72 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 22:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.02727007 0.00007642   356.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 23:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0095874  0.0001262      76 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 24:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0179869  0.0002511   71.63 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 25:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01390395 0.00003518   395.2 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 26:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0094415  0.0001429   66.07 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 27:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0103361  0.0001368   75.53 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 28:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01236109 0.00008805   140.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 29:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0148964  0.0001411   105.6 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 30:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0138117  0.0001123     123 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 31:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.02224696 0.00008669   256.6 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 32:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0161547  0.0001174   137.6 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 33:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0262117  0.0001352   193.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 34:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01268952 0.00006144   206.5 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 35:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0128453  0.0001185   108.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 36:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0199205  0.0001452   137.2 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 37:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.02254789 0.00005992   376.3 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 38:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01529397 0.00004931   310.2 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 39:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.02109409 0.00009644   218.7 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 40:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01228867 0.00008696   141.3 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 41:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01088558 0.00006883   158.1 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 42:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0146035  0.0002045   71.42 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 43:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01184387 0.00004504     263 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 44:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0117499  0.0001234   95.23 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 45:
+
+Coefficients:
+            Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.018049   0.000162   111.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 46:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0085038  0.0002216   38.38 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 47:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0186438  0.0001497   124.5 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 48:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0175684  0.0001584   110.9 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 49:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0104997  0.0003457   30.37 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 50:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0283643  0.0001907   148.7 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 51:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01206607 0.00003686   327.3 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 52:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0222352  0.0001189     187 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 53:
+
+Coefficients:
+            Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.008265   0.000143   57.81 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 54:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0182193  0.0001837   99.17 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 55:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01650620 0.00005513   299.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 56:
+
+Coefficients:
+            Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.021226   0.000145   146.4 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 57:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.01620359 0.00006227   260.2 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 58:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0093449  0.0001428   65.45 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 59:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0107160  0.0001064   100.7 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 60:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0144280  0.0001977   72.97 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 61:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.00637376 0.00006825   93.39 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 62:
+
+Coefficients:
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.0105636  0.0001051   100.5 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Topic 63:
+
+Coefficients:
+              Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.00581600 0.00002502   232.5 <0.0000000000000002 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+

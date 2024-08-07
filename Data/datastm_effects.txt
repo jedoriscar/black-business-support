@@ -1,15 +1,14 @@
 
 Call:
-estimateEffect(formula = 1:4 ~ woman_owned_label, stmobj = datastm, 
-    metadata = meta, uncertainty = "None")
+estimateEffect(formula = 1:4 ~ 1, stmobj = datastm, metadata = meta, 
+    uncertainty = "None")
 
 
 Topic 1:
 
 Coefficients:
-                   Estimate Std. Error t value            Pr(>|t|)    
-(Intercept)        0.182207   0.001616  112.77 <0.0000000000000002 ***
-woman_owned_label -0.078709   0.004266  -18.45 <0.0000000000000002 ***
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.2629059  0.0006166   426.4 <0.0000000000000002 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -17,9 +16,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Topic 2:
 
 Coefficients:
-                   Estimate Std. Error t value            Pr(>|t|)    
-(Intercept)        0.325807   0.001826  178.43 <0.0000000000000002 ***
-woman_owned_label -0.180111   0.004373  -41.19 <0.0000000000000002 ***
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.2351234  0.0004517   520.6 <0.0000000000000002 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -27,9 +25,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Topic 3:
 
 Coefficients:
-                   Estimate Std. Error t value            Pr(>|t|)    
-(Intercept)        0.294013   0.001748   168.2 <0.0000000000000002 ***
-woman_owned_label -0.065789   0.004139   -15.9 <0.0000000000000002 ***
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.2475536  0.0007513   329.5 <0.0000000000000002 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -37,9 +34,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Topic 4:
 
 Coefficients:
-                  Estimate Std. Error t value            Pr(>|t|)    
-(Intercept)       0.198192   0.001712  115.74 <0.0000000000000002 ***
-woman_owned_label 0.324208   0.004379   74.04 <0.0000000000000002 ***
+             Estimate Std. Error t value            Pr(>|t|)    
+(Intercept) 0.2544248  0.0009943   255.9 <0.0000000000000002 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 

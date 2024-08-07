@@ -1,4 +1,4 @@
-# Racial Population Growth 
+# Black Business Support 
 # Loading Packages ----
 library(tidyr) 
 library(tidyverse)
@@ -9,16 +9,13 @@ library(janitor)
 library(DataExplorer)
 # Loading Data ----
 data <- readr::read_csv(here("Data/youtube_data.csv")) # loading in the add comments
+coding_manual <- readr::read_csv(here("Data/coding_manual.csv")) %>% janitor::clean_names() 
 codes <- readr::read_csv(here("Data/coding.csv")) %>% janitor::clean_names() 
 DataExplorer::create_report(data)
 
 #left merge data and codes
+# Perform the join on the common column 'business_id' + 'user_id'
+data <- data %>%
+  left_join(codes, by = "video_id") 
 
-library (dplyr)
-data <-data.frame()
-View(result_deplyr)
-codes <-data.frame()
-View(codes)
-codes <- readr::read_csv(here("Data/coding.csv")) %>% janitor::clean_names() 
-
-save(result_dyplr, file = here("Data/result_dyplr.rda"))
+save(data, file = here("Data/Youtube/data.rda"))

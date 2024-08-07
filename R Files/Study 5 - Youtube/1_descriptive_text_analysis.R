@@ -1,4 +1,4 @@
-# Racial Population Growth
+# Black Business Support
 # Loading Packages----
 library(stm)
 library(tm)
@@ -20,12 +20,7 @@ options(scipen = 99999)
 
 # Loading data----
 coding_manual <- read.csv(here("Data/coding_manual.csv")) 
-load(here("Data/data.rda")) 
-
-# Renaming data
-data <- data
-
-
+load(here("Data/Youtube/data.rda")) 
 
 ## Descriptive Analyses for Video text-data (Univariate & Bi-variate)
 
